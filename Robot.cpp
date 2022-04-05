@@ -4,6 +4,7 @@
  * Copyright (C) 2022 Marc S. Ressl
  */
 
+#include <cstring>  /* std::memcpy */
 #include <iostream>
 #include <vector>
 

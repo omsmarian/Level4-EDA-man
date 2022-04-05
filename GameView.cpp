@@ -7,6 +7,7 @@
  */
 
 #include <cmath>
+#include <cstring>  /* std::memcpy */
 #include <iomanip>
 #include <sstream>
 
