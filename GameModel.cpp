@@ -70,7 +70,7 @@ void GameModel::start(string maze)
     gameView->setEatenFruits(eatenFruits);
 
     for (auto robot : robots)
-        robot->start();
+        robot->start(this->mqttClient, this);
 
     // Just for testing
     gameView->playAudio("mainStart");

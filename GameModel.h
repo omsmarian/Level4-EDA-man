@@ -23,6 +23,15 @@ struct MazePosition
     int y;
 };
 
+struct inputs
+{
+    inputs(){this->rightKey=0;this->leftKey=0;this->upKey=0;this->downKey=0;}
+    bool rightKey;
+    bool leftKey;
+    bool upKey;
+    bool downKey;
+};
+
 enum GameState
 {
     GameStart,
@@ -54,6 +63,8 @@ public:
     void addRobot(Robot *robot);
 
     bool isTileFree(MazePosition position);
+
+    inputs KeyboardInput;
 
 private:
     MQTTClient *mqttClient;

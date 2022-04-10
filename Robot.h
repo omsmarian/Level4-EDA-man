@@ -36,7 +36,7 @@ public:
     Robot();
     virtual ~Robot();
 
-    virtual void start() = 0;
+    virtual void start(MQTTClient* client , GameModel * model) = 0;
     virtual void update(float deltaTime);
 
 protected:

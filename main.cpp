@@ -14,6 +14,7 @@
 
 #include "GameModel.h"
 #include "GameView.h"
+#include "Player.h"
 
 using namespace std;
 
@@ -75,10 +76,13 @@ int main(int, char **)
     // Setup
     GameModel gameModel(&mqttClient);
     GameView gameView(&mqttClient);
+    Player player;
 
     // Configure
     gameModel.setGameView(&gameView);
+    gameModel.addRobot(&player);
     gameModel.start(maze);
+    
 
     while (!WindowShouldClose() && mqttClient.isConnected())
     {
@@ -95,27 +99,98 @@ int main(int, char **)
         // Model update
         gameModel.update(deltaTime);
 
-        // Keyboard control
-        if (IsKeyPressed(KEY_UP))
+        //MODULO DE PRUEBA DE ANALISIS DE TABLERO Y SETPOINT
+/*        if (gameModel.isTileFree({jugador.positionX,jugador.positionZ})
         {
-            // Your code goes here...
+            jugador.setSetpoint();
         }
-        else if (IsKeyPressed(KEY_RIGHT))
+*/        
+        
+        if(IsKeyPressed(KEY_UP))
         {
-            // Your code goes here...
+            gameModel.KeyboardInput.upKey = 1;
+            gameModel.KeyboardInput.downKey = 0;
+            gameModel.KeyboardInput.rightKey = 0;
+            gameModel.KeyboardInput.leftKey = 0;
         }
         else if (IsKeyPressed(KEY_DOWN))
         {
-            // Your code goes here...
+            gameModel.KeyboardInput.upKey = 0;
+            gameModel.KeyboardInput.downKey = 1;
+            gameModel.KeyboardInput.rightKey = 0;
+            gameModel.KeyboardInput.leftKey = 0;
         }
         else if (IsKeyPressed(KEY_LEFT))
         {
-            // Your code goes here...
+            gameModel.KeyboardInput.upKey = 0;
+            gameModel.KeyboardInput.downKey = 0;
+            gameModel.KeyboardInput.rightKey = 0;
+            gameModel.KeyboardInput.leftKey = 1;
         }
-        else
+        else if (IsKeyPressed(KEY_RIGHT))
         {
-            // Your code goes here...
+            gameModel.KeyboardInput.upKey = 0;
+            gameModel.KeyboardInput.downKey = 0;
+            gameModel.KeyboardInput.rightKey = 1;
+            gameModel.KeyboardInput.leftKey = 0;
         }
+            
+            if (gameModel.KeyboardInput.upKey)
+            {
+                player.movement(0,-1);
+            }
+            else if (gameModel.KeyboardInput.rightKey)
+            {
+                player.movement(1, 0);
+            }
+            else if (gameModel.KeyboardInput.downKey)
+            {
+                player.movement(0, 1);
+            }
+            else if (gameModel.KeyboardInput.leftKey)
+            {
+                player.movement(-1, 0);
+            }
+        
+            /*bool UpKey = false;
+            bool DownKey = false;
+            bool RightKey = false;
+            bool LeftKey = false;*/
+        // Keyboard control
+        // if (IsKeyPressed(KEY_UP))
+        // {
+        //     int i = 36;
+        //     while(i--)
+        //         player.movement(0,-1);
+        // }
+        // else if (IsKeyPressed(KEY_RIGHT))
+        // {
+        //     int i = 28;
+        //     while (i--)
+        //         player.movement(1, 0);
+        // }
+        // else if (IsKeyPressed(KEY_DOWN))
+        // {
+        //     int i = 36;
+        //     while (i--)
+        //         player.movement(0, 1);
+        // }
+        // else if (IsKeyPressed(KEY_LEFT))
+        // {
+        //     int i = 28;
+        //     while (i--)
+        //         player.movement(-1, 0);
+        // }
+        // else
+        // {
+        //     // Your code goes here...
+        // }
+
+        if(IsKeyPressed(KEY_ZERO))
+        {
+            player.reset();
+        }
+            
 
         gameView.update(deltaTime);
     }
