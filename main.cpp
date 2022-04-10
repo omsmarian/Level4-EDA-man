@@ -106,85 +106,77 @@ int main(int, char **)
         }
 */        
         
-        if(IsKeyPressed(KEY_UP))
-        {
-            gameModel.KeyboardInput.upKey = 1;
-            gameModel.KeyboardInput.downKey = 0;
-            gameModel.KeyboardInput.rightKey = 0;
-            gameModel.KeyboardInput.leftKey = 0;
-        }
-        else if (IsKeyPressed(KEY_DOWN))
-        {
-            gameModel.KeyboardInput.upKey = 0;
-            gameModel.KeyboardInput.downKey = 1;
-            gameModel.KeyboardInput.rightKey = 0;
-            gameModel.KeyboardInput.leftKey = 0;
-        }
-        else if (IsKeyPressed(KEY_LEFT))
-        {
-            gameModel.KeyboardInput.upKey = 0;
-            gameModel.KeyboardInput.downKey = 0;
-            gameModel.KeyboardInput.rightKey = 0;
-            gameModel.KeyboardInput.leftKey = 1;
-        }
-        else if (IsKeyPressed(KEY_RIGHT))
-        {
-            gameModel.KeyboardInput.upKey = 0;
-            gameModel.KeyboardInput.downKey = 0;
-            gameModel.KeyboardInput.rightKey = 1;
-            gameModel.KeyboardInput.leftKey = 0;
-        }
-            
-            if (gameModel.KeyboardInput.upKey)
-            {
-                player.movement(0,-1);
-            }
-            else if (gameModel.KeyboardInput.rightKey)
-            {
-                player.movement(1, 0);
-            }
-            else if (gameModel.KeyboardInput.downKey)
-            {
-                player.movement(0, 1);
-            }
-            else if (gameModel.KeyboardInput.leftKey)
-            {
-                player.movement(-1, 0);
-            }
+        //if(IsKeyPressed(KEY_UP))
+        //{
+        //    gameModel.KeyboardInput.upKey = 1;
+        //    gameModel.KeyboardInput.downKey = 0;
+        //    gameModel.KeyboardInput.rightKey = 0;
+        //    gameModel.KeyboardInput.leftKey = 0;
+        //}
+        //else if (IsKeyPressed(KEY_DOWN))
+        //{
+        //    gameModel.KeyboardInput.upKey = 0;
+        //    gameModel.KeyboardInput.downKey = 1;
+        //    gameModel.KeyboardInput.rightKey = 0;
+        //    gameModel.KeyboardInput.leftKey = 0;
+        //}
+        //else if (IsKeyPressed(KEY_LEFT))
+        //{
+        //    gameModel.KeyboardInput.upKey = 0;
+        //    gameModel.KeyboardInput.downKey = 0;
+        //    gameModel.KeyboardInput.rightKey = 0;
+        //    gameModel.KeyboardInput.leftKey = 1;
+        //}
+        //else if (IsKeyPressed(KEY_RIGHT))
+        //{
+        //    gameModel.KeyboardInput.upKey = 0;
+        //    gameModel.KeyboardInput.downKey = 0;
+        //    gameModel.KeyboardInput.rightKey = 1;
+        //    gameModel.KeyboardInput.leftKey = 0;
+        //}
+        //    
+        //    if (gameModel.KeyboardInput.upKey)
+        //    {
+        //        player.movement(0,-1);
+        //    }
+        //    else if (gameModel.KeyboardInput.rightKey)
+        //    {
+        //        player.movement(1, 0);
+        //    }
+        //    else if (gameModel.KeyboardInput.downKey)
+        //    {
+        //        player.movement(0, 1);
+        //    }
+        //    else if (gameModel.KeyboardInput.leftKey)
+        //    {
+        //        player.movement(-1, 0);
+        //    }
         
             /*bool UpKey = false;
             bool DownKey = false;
             bool RightKey = false;
             bool LeftKey = false;*/
-        // Keyboard control
-        // if (IsKeyPressed(KEY_UP))
-        // {
-        //     int i = 36;
-        //     while(i--)
-        //         player.movement(0,-1);
-        // }
-        // else if (IsKeyPressed(KEY_RIGHT))
-        // {
-        //     int i = 28;
-        //     while (i--)
-        //         player.movement(1, 0);
-        // }
-        // else if (IsKeyPressed(KEY_DOWN))
-        // {
-        //     int i = 36;
-        //     while (i--)
-        //         player.movement(0, 1);
-        // }
-        // else if (IsKeyPressed(KEY_LEFT))
-        // {
-        //     int i = 28;
-        //     while (i--)
-        //         player.movement(-1, 0);
-        // }
-        // else
-        // {
-        //     // Your code goes here...
-        // }
+         //Keyboard control
+         if (IsKeyPressed(KEY_UP))
+         {
+            player.movement(0,-1);
+         }
+         else if (IsKeyPressed(KEY_RIGHT))
+         {
+            player.movement(1, 0);
+         }
+         else if (IsKeyPressed(KEY_DOWN))
+         {
+            player.movement(0, 1);
+         }
+         else if (IsKeyPressed(KEY_LEFT))
+         {
+            player.movement(-1, 0);
+         }
+         else
+         {
+             // Your code goes here...
+         }
 
         if(IsKeyPressed(KEY_ZERO))
         {

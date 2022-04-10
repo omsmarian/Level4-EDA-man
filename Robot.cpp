@@ -12,6 +12,8 @@
 
 using namespace std;
 
+const float RADIUS = 0.09;
+
 Robot::Robot()
 {
     // To-Do: set your path!
@@ -40,8 +42,8 @@ MazePosition Robot::getMazePosition(RobotSetpoint setpoint)
 RobotSetpoint Robot::getRobotSetpoint(MazePosition mazePosition, float rotation)
 {
     RobotSetpoint setpoint;
-    setpoint.positionX = 0.1F * mazePosition.x - 1.35F;
-    setpoint.positionZ = 1.75F - 0.1F * mazePosition.y;
+    setpoint.positionX = 0.1F * mazePosition.x - 1.35F - RADIUS;
+    setpoint.positionZ = 1.75F - 0.1F * mazePosition.y - RADIUS;
     setpoint.rotation = rotation;
     return setpoint;
 }
