@@ -1,9 +1,12 @@
 /**
- * EDA-Man game view
- *
- * Copyright (C) 2022 Marc S. Ressl
- *
- * Controls EDD-Man view over MQTT.
+ * @file GameView.h
+ * @author Marc S. Ressl
+ * @brief Controls the EDA-Man views (LED floor and jukebox)
+ * @version 0.1
+ * @date 2022-04-12
+ * 
+ * @copyright Copyright (c) 2022
+ * 
  */
 
 #ifndef _GAMEVIEW_H
@@ -15,6 +18,10 @@
 
 #include "MQTTClient.h"
 
+/**
+ * @brief A message for the GameView setMessage method.
+ * 
+ */
 enum GameViewMessage
 {
     GameViewMessageNone,
@@ -22,20 +29,17 @@ enum GameViewMessage
     GameViewMessageGameOver,
 };
 
-/**
- * Controls the EDA-Man views (LED Floor and Jukebox)
- */
 class GameView
 {
 public:
     GameView(MQTTClient *mqttClient);
 
     void start(std::string maze);
-    void update(float time);
+    void update(float deltaTime);
 
     void setMessage(GameViewMessage value);
 
-    void clearDot(int x, int y);
+    void clearTile(int x, int y);
     void setFruit(int x, int y, int fruitIndex);
 
     void setScore(int value);

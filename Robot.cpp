@@ -1,10 +1,11 @@
 /**
  * Robot base class.
  *
- * Copyright (C) 2022 Marc S. Ressl
+ * @copyright Copyright (C) 2022
+ * @author Marc S. Ressl
  */
 
-#include <cstring>  /* std::memcpy */
+#include <cstring>  // std::memcpy
 #include <iostream>
 #include <vector>
 
@@ -12,64 +13,113 @@
 
 using namespace std;
 
-const float RADIUS = 0.09;
-
+/**
+ * @brief Construct a new Robot:: Robot object
+ * 
+ */
 Robot::Robot()
 {
     // To-Do: set your path!
-    displayImages = LoadImage("../../../RobotImages.png");
+    displayImages = LoadImage("../../RobotImages.png");
 }
 
+/**
+ * @brief Destroy the Robot:: Robot object
+ * 
+ */
 Robot::~Robot()
 {
     UnloadImage(displayImages);
 }
 
+/**
+ * @brief Initializes the robot for a game.
+ *
+ */
+void Robot::start()
+{
+}
+
+/**
+ * @brief Updates the robot for the current frame.
+ *
+ * @param deltaTime The number of seconds since the last frame.
+ */
 void Robot::update(float deltaTime)
 {
 }
 
-MazePosition Robot::getMazePosition(RobotSetpoint setpoint)
+/**
+ * @brief Converts a setpoint to a tile position in maze coordinates.
+ *
+ * @param setpoint The setpoint
+ * @return Vector2 The tile position
+ */
+Vector2 Robot::getTilePosition(Setpoint setpoint)
 {
-    MazePosition mazePosition;
+    Vector2 mazePosition;
 
-    mazePosition.x = (int)(10.0F * (1.4F + setpoint.positionX));
-    mazePosition.y = (int)(10.0F * (1.8F - setpoint.positionZ));
+    mazePosition.x = (10.0F * (1.4F + setpoint.position.x));
+    mazePosition.y = (10.0F * (1.8F - setpoint.position.y));
 
     return mazePosition;
 }
 
-RobotSetpoint Robot::getRobotSetpoint(MazePosition mazePosition, float rotation)
+/**
+ * @brief Converts a tile position in maze coordinates to a setpoint.
+ *
+ * @param tilePosition The tile position
+ * @return Setpoint The setpoint (using current robot rotation)
+ */
+Setpoint Robot::getSetpoint(Vector2 tilePosition)
 {
-    RobotSetpoint setpoint;
-    setpoint.positionX = 0.1F * mazePosition.x - 1.35F - RADIUS;
-    setpoint.positionZ = 1.75F - 0.1F * mazePosition.y - RADIUS;
-    setpoint.rotation = rotation;
+    Setpoint setpoint;
+    setpoint.position.x = -1.4F + 0.1F * tilePosition.x;
+    setpoint.position.y = 1.8F - 0.1F * tilePosition.y;
+    setpoint.rotation = this->setpoint.rotation;
+
     return setpoint;
 }
 
-void Robot::setSetpoint(RobotSetpoint setpoint)
+/**
+ * @brief Sets the robot controller setpoint.
+ *
+ * @param setpoint The setpoint
+ */
+void Robot::setSetpoint(Setpoint setpoint)
 {
+    this->setpoint = setpoint;
+
     vector<char> payload(12);
 
-    *((float *)&payload[0]) = setpoint.positionX;
-    *((float *)&payload[4]) = setpoint.positionZ;
+    *((float *)&payload[0]) = setpoint.position.x;
+    *((float *)&payload[4]) = setpoint.position.y;
     *((float *)&payload[8]) = setpoint.rotation;
 
     mqttClient->publish(robotId + "/pid/setpoint/set", payload);
 }
 
-void Robot::liftTo(float positionX, float positionZ)
+/**
+ * @brief Lifts the robot to a destination coordinate
+ *
+ * @param destination The destination coordinate (x: left-right, y: up-down, z: forward-back)
+ */
+void Robot::liftTo(Vector3 destination)
 {
     vector<char> payload(12);
 
-    *((float *)&payload[0]) = positionX;
-    *((float *)&payload[4]) = 0;
-    *((float *)&payload[8]) = positionZ;
+    *((float *)&payload[0]) = destination.x;
+    *((float *)&payload[4]) = destination.y;
+    *((float *)&payload[8]) = destination.z;
 
     mqttClient->publish("hook/" + robotId + "/cmd", payload);
 }
 
+/**
+ * @brief Sets image on the display
+ *
+ * @param imageIndex The index of the image (see RobotImages.png)
+ */
 void Robot::setDisplay(int imageIndex)
 {
     Rectangle selectRectangle = {16.0F * imageIndex, 0, 16, 16};
@@ -84,6 +134,12 @@ void Robot::setDisplay(int imageIndex)
     mqttClient->publish(robotId + "/display/lcd/set", payload);
 }
 
+/**
+ * @brief Set robot eyes.
+ *
+ * @param leftEye Left eye color
+ * @param rightEye Right eye color.
+ */
 void Robot::setEyes(Color leftEye, Color rightEye)
 {
     vector<char> payload(3);

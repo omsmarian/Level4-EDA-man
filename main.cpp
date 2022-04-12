@@ -1,9 +1,10 @@
-/*
+/**
  * EDA-Man
  *
- * Copyright (C) 2022 Marc S. Ressl
- *
- * Controls an EDA-Man game.
+ * @copyright Copyright (C) 2022
+ * @author Marc S. Ressl
+ * 
+ * @brief Controls an EDA-Man game.
  */
 
 #include <iostream>
@@ -14,7 +15,6 @@
 
 #include "GameModel.h"
 #include "GameView.h"
-#include "Player.h"
 
 using namespace std;
 
@@ -32,7 +32,7 @@ int main(int, char **)
     cout << "Connected." << endl;
 
     // raylib
-    InitWindow(640, 480, "EDA-Man Controller");
+    InitWindow(640, 480, "EDAPark Controller");
     SetTargetFPS(60);
 
     string maze =
@@ -52,9 +52,9 @@ int main(int, char **)
         "     s+ph``w vw v``iq+r     "
         "     s+pq          pq+r     "
         "     s+pq dcc__cce pq+r     "
-        "jbbbbw+vw r      s vw+vbbbbk"
-        "s     +   r      s   +     r"
-        "zccccg+fg r      s fg+fcccc{"
+        "     s+vw r      s vw+r     "
+        "     s+   r      s   +r     "
+        "     s+fg r      s fg+r     "
         "     s+pq tbbbbbbu pq+r     "
         "     s+pq          pq+r     "
         "     s+pq faaaaaag pq+r     "
@@ -76,13 +76,11 @@ int main(int, char **)
     // Setup
     GameModel gameModel(&mqttClient);
     GameView gameView(&mqttClient);
-    Player player;
 
     // Configure
     gameModel.setGameView(&gameView);
-    gameModel.addRobot(&player);
+
     gameModel.start(maze);
-    
 
     while (!WindowShouldClose() && mqttClient.isConnected())
     {
@@ -99,90 +97,27 @@ int main(int, char **)
         // Model update
         gameModel.update(deltaTime);
 
-        //MODULO DE PRUEBA DE ANALISIS DE TABLERO Y SETPOINT
-/*        if (gameModel.isTileFree({jugador.positionX,jugador.positionZ})
+        // Keyboard control
+        if (IsKeyDown(KEY_UP))
         {
-            jugador.setSetpoint();
+            // Your code goes here...
         }
-*/        
-        
-        //if(IsKeyPressed(KEY_UP))
-        //{
-        //    gameModel.KeyboardInput.upKey = 1;
-        //    gameModel.KeyboardInput.downKey = 0;
-        //    gameModel.KeyboardInput.rightKey = 0;
-        //    gameModel.KeyboardInput.leftKey = 0;
-        //}
-        //else if (IsKeyPressed(KEY_DOWN))
-        //{
-        //    gameModel.KeyboardInput.upKey = 0;
-        //    gameModel.KeyboardInput.downKey = 1;
-        //    gameModel.KeyboardInput.rightKey = 0;
-        //    gameModel.KeyboardInput.leftKey = 0;
-        //}
-        //else if (IsKeyPressed(KEY_LEFT))
-        //{
-        //    gameModel.KeyboardInput.upKey = 0;
-        //    gameModel.KeyboardInput.downKey = 0;
-        //    gameModel.KeyboardInput.rightKey = 0;
-        //    gameModel.KeyboardInput.leftKey = 1;
-        //}
-        //else if (IsKeyPressed(KEY_RIGHT))
-        //{
-        //    gameModel.KeyboardInput.upKey = 0;
-        //    gameModel.KeyboardInput.downKey = 0;
-        //    gameModel.KeyboardInput.rightKey = 1;
-        //    gameModel.KeyboardInput.leftKey = 0;
-        //}
-        //    
-        //    if (gameModel.KeyboardInput.upKey)
-        //    {
-        //        player.movement(0,-1);
-        //    }
-        //    else if (gameModel.KeyboardInput.rightKey)
-        //    {
-        //        player.movement(1, 0);
-        //    }
-        //    else if (gameModel.KeyboardInput.downKey)
-        //    {
-        //        player.movement(0, 1);
-        //    }
-        //    else if (gameModel.KeyboardInput.leftKey)
-        //    {
-        //        player.movement(-1, 0);
-        //    }
-        
-            /*bool UpKey = false;
-            bool DownKey = false;
-            bool RightKey = false;
-            bool LeftKey = false;*/
-         //Keyboard control
-         if (IsKeyPressed(KEY_UP))
-         {
-            player.movement(0,-1);
-         }
-         else if (IsKeyPressed(KEY_RIGHT))
-         {
-            player.movement(1, 0);
-         }
-         else if (IsKeyPressed(KEY_DOWN))
-         {
-            player.movement(0, 1);
-         }
-         else if (IsKeyPressed(KEY_LEFT))
-         {
-            player.movement(-1, 0);
-         }
-         else
-         {
-             // Your code goes here...
-         }
-
-        if(IsKeyPressed(KEY_ZERO))
+        else if (IsKeyDown(KEY_RIGHT))
         {
-            player.reset();
+            // Your code goes here...
         }
-            
+        else if (IsKeyDown(KEY_DOWN))
+        {
+            // Your code goes here...
+        }
+        else if (IsKeyDown(KEY_LEFT))
+        {
+            // Your code goes here...
+        }
+        else
+        {
+            // Your code goes here...
+        }
 
         gameView.update(deltaTime);
     }

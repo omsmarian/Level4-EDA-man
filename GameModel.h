@@ -1,9 +1,12 @@
 /**
- * EDA-Man game model
- *
- * Copyright (C) 2022 Marc S. Ressl
- *
- * Controls the game model.
+ * @file GameModel.h
+ * @author Marc S. Ressl
+ * @brief EDA-Man game model
+ * @version 0.1
+ * @date 2022-04-12
+ * 
+ * @copyright Copyright (c) 2022
+ * 
  */
 
 #ifndef _GAMEMODEL_H
@@ -11,27 +14,10 @@
 
 class Robot;
 
-struct MazePosition
-{
-    MazePosition(int x = 0, int y = 0)
-    {
-        this->x = x;
-        this->y = y;
-    }
-
-    int x;
-    int y;
-};
-
-struct inputs
-{
-    inputs(){this->rightKey=0;this->leftKey=0;this->upKey=0;this->downKey=0;}
-    bool rightKey;
-    bool leftKey;
-    bool upKey;
-    bool downKey;
-};
-
+/**
+ * @brief Game state
+ * 
+ */
 enum GameState
 {
     GameStart,
@@ -57,14 +43,12 @@ public:
 
     void setGameView(GameView *gameView);
 
+    void addRobot(Robot *robot);
+
     void start(std::string maze);
     void update(float deltaTime);
 
-    void addRobot(Robot *robot);
-
-    bool isTileFree(MazePosition position);
-
-    inputs KeyboardInput;
+    bool isTileFree(Vector2 position);
 
 private:
     MQTTClient *mqttClient;

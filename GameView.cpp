@@ -1,13 +1,16 @@
 /**
- * EDA-Man View
- *
- * Copyright (C) 2022 Marc S. Ressl
- *
- * Controls EDA-Man view over MQTT.
+ * @file GameView.h
+ * @author Marc S. Ressl
+ * @brief Controls EDA-Man LED floor and jukebox
+ * @version 0.1
+ * @date 2022-04-12
+ * 
+ * @copyright Copyright (c) 2022
+ * 
  */
 
 #include <cmath>
-#include <cstring>  /* std::memcpy */
+#include <cstring>  // std::memcpy
 #include <iomanip>
 #include <sstream>
 
@@ -28,9 +31,9 @@ const int GAMEOVER_COLOR = 1;
 const int READY_COLOR = 9;
 
 /**
- * Constructs an EDA-Man View object.
- *
- * @param clientClient An MQTT client instance
+ * @brief Construct a new Game View:: Game View object
+ * 
+ * @param mqttClient An MQTT client instance
  */
 GameView::GameView(MQTTClient *mqttClient)
 {
@@ -45,8 +48,8 @@ GameView::GameView(MQTTClient *mqttClient)
 }
 
 /**
- * Resets screen to game start condition
- *
+ * @brief Resets screen to initial game conditions.
+ * 
  * @param maze A maze (size 28x36)
  */
 void GameView::start(string maze)
@@ -94,11 +97,9 @@ void GameView::start(string maze)
 }
 
 /**
- * Updates screen.
- *
- * Should be called on screen update.
- *
- * @param time Number of seconds from start of game.
+ * @brief Updates screen for current frame.
+ * 
+ * @param deltaTime Number of seconds since the last frame.
  */
 void GameView::update(float deltaTime)
 {
@@ -128,10 +129,8 @@ void GameView::update(float deltaTime)
 }
 
 /**
- * Shows the "READY!" message at the beginning of a level,
- * the "GAME  OVER" message when all lives are lost,
- * or hides any message.
- *
+ * @brief Sets game message ("READY!" at beginning of level, "GAME  OVER" at end of game, or hides message).
+ * 
  * @param value A GameViewMessage
  */
 void GameView::setMessage(GameViewMessage value)
@@ -150,12 +149,12 @@ void GameView::setMessage(GameViewMessage value)
 }
 
 /**
- * Clears a dot (also energizers or fruits)
- *
- * @param x x maze coordinate
- * @param y y maze coordinate
+ * @brief Clears a tile (dot, energizer or fruit).
+ * 
+ * @param x x tile coordinate
+ * @param y y tile coordinate
  */
-void GameView::clearDot(int x, int y)
+void GameView::clearTile(int x, int y)
 {
     setTiles(x, y, 0, " ");
 
@@ -171,11 +170,11 @@ void GameView::clearDot(int x, int y)
 }
 
 /**
- * Places a fruit in the maze.
- *
- * @param x x maze coordinate
- * @param y y maze coordinate
- * @param fruitIndex type of fruit (0 to 7)
+ * @brief Places a fruit in the maze.
+ * 
+ * @param x x tile coordinate of fruit
+ * @param y y tile coorindate of fruit
+ * @param fruitIndex Type of fruit (0 to 7)
  */
 void GameView::setFruit(int x, int y, int fruitIndex)
 {
@@ -185,8 +184,8 @@ void GameView::setFruit(int x, int y, int fruitIndex)
 }
 
 /**
- * Sets current score.
- *
+ * @brief Sets score.
+ * 
  * @param value The score
  */
 void GameView::setScore(int value)
@@ -197,8 +196,8 @@ void GameView::setScore(int value)
 }
 
 /**
- * Sets current high score.
- *
+ * @brief Sets high score.
+ * 
  * @param value The high score
  */
 void GameView::setHighScore(int value)
@@ -209,9 +208,9 @@ void GameView::setHighScore(int value)
 }
 
 /**
- * Updates the number of lives left indicator (lower left).
- *
- * @param numberOfLives The number of lives
+ * @brief Updates number of lives left indicator (lower left).
+ * 
+ * @param numberOfLives Number of lives left
  */
 void GameView::setLives(int numberOfLives)
 {
@@ -238,9 +237,9 @@ void GameView::setLives(int numberOfLives)
 }
 
 /**
- * Updates the eaten fruits indicator (lower right).
- *
- * @param fruitIndices A list of all eaten fruits (fruitIndex is the type of fruit, from 0 to 7)
+ * @brief Updates the eaten fruits indicator (lower right).
+ * 
+ * @param fruitIndices List of all eaten fruits (fruitIndex is type of fruit: 0 to 7)
  */
 void GameView::setEatenFruits(list<int> &fruitIndices)
 {
@@ -272,14 +271,12 @@ void GameView::setEatenFruits(list<int> &fruitIndices)
 }
 
 /**
- * Sends screen tiles.
- *
- * Wraps long lines to next rows.
- *
- * @param x start at x maze coordinate
- * @param y start at y maze coordinate
- * @param palette EDA-Man palette color (only characters 0x00-0x7f)
- * @param s data to be displayed
+ * @brief Sends screen tiles. Wraps long lines to next row(s).
+ * 
+ * @param x start in x tile coordinates
+ * @param y start in y tile coordinates
+ * @param palette Palette color (tints characters 0x00-0x7f)
+ * @param s Tile data
  */
 void GameView::setTiles(int x, int y, int palette, string s)
 {
@@ -294,7 +291,8 @@ void GameView::setTiles(int x, int y, int palette, string s)
 }
 
 /**
- * Clears the screen.
+ * @brief Clears the LED floor.
+ * 
  */
 void GameView::clearScreen()
 {
@@ -302,9 +300,9 @@ void GameView::clearScreen()
 }
 
 /**
- * Plays a sound.
- *
- * @param name Name of sound
+ * @brief Plays a sound.
+ * 
+ * @param audioId Audio id
  */
 void GameView::playAudio(string audioId)
 {
@@ -314,9 +312,9 @@ void GameView::playAudio(string audioId)
 }
 
 /**
- * Stops a sound.
- *
- * @param name Name of sound
+ * @brief Stops a sound.
+ * 
+ * @param audioId Audio id
  */
 void GameView::stopAudio(string audioId)
 {

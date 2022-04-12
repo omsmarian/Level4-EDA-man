@@ -1,7 +1,15 @@
 /**
- * Simple MQTT Client
+ * @file MQTTClient.cpp
+ * @author Marc S. Ressl
+ * @brief Simple MQTT client
+ * @version 1.0
+ * @date 2022-04-12
  *
- * Copyright (C) 2022 Marc S. Ressl
+ * @copyright Copyright (c) 2022
+ *
+ * libmosquitto documentation:
+ * https://mosquitto.org/api/files/mosquitto-h.html
+ *
  */
 
 #ifndef _MQTTCLIENT_H
@@ -13,11 +21,11 @@
 #include <mosquitto.h>
 
 /**
- * Container for MQTT messages
+ * @brief
+ *
  */
-class MQTTMessage
+struct MQTTMessage
 {
-public:
     std::string topic;
     std::vector<char> payload;
 };

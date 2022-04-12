@@ -1,10 +1,15 @@
 /**
- * Simple MQTT Client
- *
- * Copyright (C) 2022 Marc S. Ressl
- *
+ * @file MQTTClient.cpp
+ * @author Marc S. Ressl
+ * @brief Simple MQTT client
+ * @version 1.0
+ * @date 2022-04-12
+ * 
+ * @copyright Copyright (c) 2022
+ * 
  * libmosquitto documentation:
  * https://mosquitto.org/api/files/mosquitto-h.html
+ *
  */
 
 #include <cstring>
@@ -21,7 +26,10 @@ using namespace std;
 // Awful but necessary global variable:
 static bool isMosquittoInitialized = false;
 
-// MQTT message callback.
+/**
+ * @brief MQTT message callback.
+ * 
+ */
 static void onMQTTMessage(struct mosquitto *mosquittoClient,
                           void *context,
                           const struct mosquitto_message *message)
@@ -37,9 +45,9 @@ static void onMQTTMessage(struct mosquitto *mosquittoClient,
 }
 
 /**
- * Constructs an MQTT client object.
- *
- * @param clientId MQTT client identifier
+ * @brief Construct a new MQTTClient::MQTTClient object
+ * 
+ * @param clientId An MQTT client identifier
  */
 MQTTClient::MQTTClient(string clientId)
 {
@@ -59,18 +67,24 @@ MQTTClient::MQTTClient(string clientId)
     connected = false;
 }
 
+/**
+ * @brief Destroy the MQTTClient::MQTTClient object
+ * 
+ */
 MQTTClient::~MQTTClient()
 {
     mosquitto_destroy(mosquittoInstance);
 }
 
 /**
- * Connects to an MQTT server without encryption.
- *
+ * @brief Connects to an MQTT server without encryption.
+ * 
  * @param host Host to connect to (IP address or domain name)
- * @param host MQTT username
- * @param host MQTT password
- * @return Call successful
+ * @param port TCP port of MQTT server
+ * @param username MQTT username
+ * @param password MQTT password
+ * @return true Call successful
+ * @return false Call failed
  */
 bool MQTTClient::connect(string host, int port, string username, string password)
 {
@@ -94,9 +108,10 @@ bool MQTTClient::connect(string host, int port, string username, string password
 }
 
 /**
- * Connection up?
- *
- * @return Connection is up
+ * @brief Connection up?
+ * 
+ * @return true Connection is up
+ * @return false Connection is down
  */
 bool MQTTClient::isConnected()
 {
@@ -104,7 +119,8 @@ bool MQTTClient::isConnected()
 }
 
 /**
- * Disconnects from the MQTT server.
+ * @brief Disconnects from the MQTT server.
+ * 
  */
 void MQTTClient::disconnect()
 {
@@ -114,11 +130,12 @@ void MQTTClient::disconnect()
 }
 
 /**
- * Publishes an MQTT message on the server.
- *
+ * @brief Publishes an MQTT message on the server.
+ * 
  * @param topic The MQTT topic
  * @param payload The data to be sent
- * @return Call successful
+ * @return true Message sent
+ * @return false Message not sent
  */
 bool MQTTClient::publish(string topic, vector<char> &payload)
 {
@@ -140,12 +157,11 @@ bool MQTTClient::publish(string topic, vector<char> &payload)
 }
 
 /**
- * Sends an MQTT subscription request.
- *
- * Topic may contain wildcards ('+' for any topic, '#' for anything below in tree).
- *
+ * @brief Sends an MQTT subscription request.
+ * 
  * @param topic The MQTT topic
- * @return Call successful
+ * @return true Call successful
+ * @return false Call failed
  */
 bool MQTTClient::subscribe(string topic)
 {
@@ -163,12 +179,11 @@ bool MQTTClient::subscribe(string topic)
 }
 
 /**
- * Sends an MQTT unsubscription request.
- *
- * Should match a previous subscription request.
- *
+ * @brief Send an MQTT unsubscription request. Should match a previous subscription request.
+ * 
  * @param topic The MQTT topic
- * @return Call successful
+ * @return true Call successfull
+ * @return false Call failed
  */
 bool MQTTClient::unsubscribe(string topic)
 {
@@ -183,11 +198,9 @@ bool MQTTClient::unsubscribe(string topic)
 }
 
 /**
- * Retrieves MQTT messages.
- *
- * Should be called often so messages do not accumulate.
- *
- * @return The MQTT messages
+ * @brief Retrieves MQTT messages. Should be called frequently.
+ * 
+ * @return vector<MQTTMessage> The retrieved messages
  */
 vector<MQTTMessage> MQTTClient::getMessages()
 {
