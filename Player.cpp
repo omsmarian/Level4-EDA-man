@@ -1,24 +1,37 @@
 #include "Player.h"
 
-void Player::start(MQTTClient* client, GameModel* model)
+#define MODULO(x) ((x>0)?(x):(-x))
+
+Player::Player (Vector2 origenCoords, std::string robotLabel, int imagePointer)
 {
-    this->robotId = "robot1";
-    this->mqttClient = client;
-    this->gameModel = model;
-    this->setDisplay(1);
-    this->liftTo(0,0);
-    RobotSetpoint originPlace = {0,0,0};
-    this->coordenates = this->getMazePosition (originPlace);
+    this->posXY = origenCoords;
+    this->robotDirection = DirectionNone;
+    this->imageIndex = imagePointer;
+    this->robotId = robotLabel;
 }
 
-void Player::movement(int posX, int posZ)
+int Player::IsRobotInPlace ()
 {
-    this->coordenates = {this->coordenates.x + posX, this->coordenates.y + posZ};
-    RobotSetpoint lugar = this->getRobotSetpoint(this->coordenates, 0);
-    this->setSetpoint(lugar);
+    //tomo las coordenadas reales del robot fisico
+    Vector3 realCoordenates .......... ; //completar con los mensajes recibidos
+
+    //tomo las coordenadas virtuales del robot en XY
+    Setpoint virtualCoordenates = this->getSetpoint(this->posXY);
+
+    //tomo el modulo de las distancias en X e Y entre las coordenadas reales y virtuales
+    float Xdifference = virtualCoordenates.position.x - realCoordenates.x;
+    Xdifference = MODULO(Xdifference);
+
+    float Ydifference = virtualCoordenates.position.y - realCoordenates.z;
+    Ydifference = MODULO(Ydifference);
+
+    if(Xdifference > 0.05F || Ydifference > 0.05F) //0.05 = 5 cm
+        return 0; //aun no llega a su posicion
+
+    return 1; //caso en el que el robot esta donde deberia
 }
 
 void Player::reset()
 {
-    this->liftTo(0, 0);
+    this->liftTo(this->spawn);
 }

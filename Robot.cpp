@@ -18,9 +18,9 @@ using namespace std;
  * 
  */
 Robot::Robot()
-{
-    // To-Do: set your path!
-    displayImages = LoadImage("../../RobotImages.png");
+{    
+    // To-Do: set your path! ~~~ cambia segun la direccion de cada compu ~~~~
+    displayImages = LoadImage("../../../RobotImages.png"); 
 }
 
 /**
@@ -29,15 +29,19 @@ Robot::Robot()
  */
 Robot::~Robot()
 {
-    UnloadImage(displayImages);
+    UnloadImage(this->displayImages);
 }
 
 /**
  * @brief Initializes the robot for a game.
  *
  */
-void Robot::start()
+void Robot::start(MQTTClient* client, GameModel* model)
 {
+    this->mqttClient = client;
+    this->gameModel = model;
+    this->setDisplay();
+    this->liftTo(this->posXY.x, 0, this->posXY.y;
 }
 
 /**
@@ -47,6 +51,33 @@ void Robot::start()
  */
 void Robot::update(float deltaTime)
 {
+    float Xchange = 0, Ychange = 0;
+    float posChange = deltaTime * this->speed;
+
+    if(this->robotDirection == DirectionUp)
+    {
+        Ychange = -posChange;
+    }
+    else if(this->robotDirection == DirectionDown)
+    {
+        Ychange = posChange;
+    }
+    else if(this->robotDirection == DirectionLeft)
+    {
+        Xchange = -posChange;
+    }
+    else if(this->robotDirection == DirectionRight)
+    {
+        Xchange = posChange;
+    }
+    else //direction none
+    {
+        //algo fallo xq quiere decir que no hay una direccion valida
+    }
+
+    Vector2 positionChange = {Xchange, Ychange};
+    this->posXY = {this->posXY.x + positionChange.x , this->posXY.y + positionChange.y};
+    this->movement(this->posXY);
 }
 
 /**
@@ -99,6 +130,16 @@ void Robot::setSetpoint(Setpoint setpoint)
     mqttClient->publish(robotId + "/pid/setpoint/set", payload);
 }
 
+void Robot::movement(Vector2 position)
+{
+    this->coordenates = {this->coordenates.x + position.x, this->coordenates.y + position.y};
+    Setpoint lugar = this->getSetpoint(this->coordenates);
+    this->setSetpoint(lugar);
+    /*
+    
+    */
+}
+
 /**
  * @brief Lifts the robot to a destination coordinate
  *
@@ -120,9 +161,9 @@ void Robot::liftTo(Vector3 destination)
  *
  * @param imageIndex The index of the image (see RobotImages.png)
  */
-void Robot::setDisplay(int imageIndex)
+void Robot::setDisplay()
 {
-    Rectangle selectRectangle = {16.0F * imageIndex, 0, 16, 16};
+    Rectangle selectRectangle = {16.0F * this->imageIndex, 0, 16, 16};
     Image selectedImage = ImageFromImage(displayImages, selectRectangle);
 
     const int dataSize = 16 * 16 * 3;

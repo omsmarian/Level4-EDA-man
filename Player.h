@@ -9,15 +9,12 @@ Clase del jugador heredada de robot
 class Player : public Robot
 {
 public:
-
-    RobotSetpoint position;
-    void start(MQTTClient* client , GameModel * model);
-    void movement(int posX, int posZ);
+    Player(Vector2 origenCoords, std::string robotLabel, int imagePointer);
+    Setpoint position;
     void reset();
+    int IsRobotInPlace();
 
 private:
-    MazePosition coordenates;
-
 };
 
 
