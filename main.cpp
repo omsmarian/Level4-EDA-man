@@ -105,23 +105,23 @@ int main(int, char **)
         // Keyboard control
         if (IsKeyDown(KEY_UP))
         {
-            // Your code goes here...
+            jugador.setDirection(DirectionUp);
         }
         else if (IsKeyDown(KEY_RIGHT))
         {
-            // Your code goes here...
+            jugador.setDirection(DirectionRight);
         }
         else if (IsKeyDown(KEY_DOWN))
         {
-            // Your code goes here...
+            jugador.setDirection(DirectionDown);
         }
         else if (IsKeyDown(KEY_LEFT))
         {
-            // Your code goes here...
+            jugador.setDirection(DirectionLeft);
         }
         else
         {
-            // Your code goes here...
+            jugador.setDirection(DirectionNone);
         }
 
         gameView.update(deltaTime);

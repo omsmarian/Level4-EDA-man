@@ -9,8 +9,8 @@ class Player : public Robot
 public:
 	Player(std::string id, Vector2 spawn);
 	void start(MQTTClient* client, GameModel* model);
-private:
 
+private:
 };
 
 

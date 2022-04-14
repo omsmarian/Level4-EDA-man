@@ -17,6 +17,7 @@ class GameModel;
 #include "MQTTClient.h"
 #include "GameModel.h"
 
+#define VELOCIDAD 0,0064
 /**
  * @brief Robot controller setpoint.
  * 
@@ -51,6 +52,7 @@ public:
 
     virtual void start(MQTTClient* client, GameModel* model);
     void update(float deltaTime);
+    void setDirection(Direction currentDirection);
 
 protected:
     // These variables should be set by you...
@@ -60,13 +62,13 @@ protected:
 
     Image displayImages;
 
-    Vector2 spawn;
+    Vector2 coordinates;
 
+    Direction direction;
     bool isMoving;
     Setpoint setpoint;
 
     // Add your variables here...
-
     Vector2 getTilePosition(Setpoint setpoint);
     Setpoint getSetpoint(Vector2 tilePosition);
     void setSetpoint(Setpoint setpoint);
@@ -74,6 +76,7 @@ protected:
     void setDisplay(int imageIndex);
     void setEyes(Color leftEye, Color rightEye);
     Vector3 converter(Vector2 vector);
+    void movement(Vector2 coordinates);
 };
 
 #endif

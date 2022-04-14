@@ -48,6 +48,20 @@ void Robot::start(MQTTClient* client, GameModel* model)
  */
 void Robot::update(float deltaTime)
 {
+    Vector2 increment = { 0,0 };
+    if (this->direction == DirectionUp)
+        increment.y = deltaTime * VELOCIDAD;
+    else if (this->direction == DirectionDown)
+        increment.y = -1 * deltaTime * VELOCIDAD;
+    else if (this->direction == DirectionRight)
+        increment.x = deltaTime * VELOCIDAD;
+    else if (this->direction == DirectionLeft)
+        increment.x = -1 * deltaTime * VELOCIDAD;
+    else if (this->direction == DirectionNone){
+        increment.x = 0;
+        increment.y = 0;
+    }
+    this->movement(increment);
 }
 
 /**
@@ -162,4 +176,19 @@ Vector3 Robot::converter(Vector2 vector)
     variable.y = 0;
     variable.z = vector.y;
     return variable;
+}
+
+
+void Robot::movement(Vector2 addCoordinates)
+{
+    this->coordinates.x += addCoordinates.x;
+    this->coordinates.y += addCoordinates.y;
+    this->setpoint.position = this->coordinates;
+    this->setpoint.rotation = 0;
+    this->setSetpoint(this->setpoint);
+}
+
+void Robot::setDirection(Direction currentDirection)
+{
+    this->direction = currentDirection;
 }
