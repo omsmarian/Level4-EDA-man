@@ -17,7 +17,7 @@ class GameModel;
 #include "MQTTClient.h"
 #include "GameModel.h"
 
-#define VELOCIDAD 0,0064
+#define VELOCIDAD 0.64f
 /**
  * @brief Robot controller setpoint.
  * 
