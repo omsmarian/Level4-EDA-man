@@ -8,7 +8,7 @@
  */
 
 #include <iostream>
-#include <windows.h>
+
 #include <raylib.h>
 
 #include "MQTTClient.h"
@@ -16,6 +16,7 @@
 #include "GameModel.h"
 #include "GameView.h"
 #include "Player.h"
+
 
 using namespace std;
 
@@ -54,52 +55,36 @@ int main(int, char **)
         "     s+pq          pq+r     "
         "     s+pq dcc__cce pq+r     "
         "     s+vw r      s vw+r     "
-        "     s+   r      s   +r     "
-        "     s+fg r      s fg+r     "
-        "     s+pq tbbbbbbu pq+r     "
-        "     s+pq          pq+r     "
-        "     s+pq faaaaaag pq+r     "
-        "jbbbbw+vw v``ih``w vw+vbbbbk"
-        "s++++++++++++pq++++++++++++r"
-        "s+faag+faaag+pq+faaag+faag+r"
-        "s+v`iq+v```w+vw+v```w+ph`w+r"
-        "s#++pq+++++++  +++++++pq++#r"
-        "|ag+pq+fg+faaaaaag+fg+pq+fa}"
-        "l`w+vw+pq+v``ih``w+pq+vw+v`m"
-        "s++++++pq++++pq++++pq++++++r"
-        "s+faaaayxaag+pq+faayxaaaag+r"
-        "s+v````````w+vw+v````````w+r"
-        "s++++++++++++++++++++++++++r"
-        "zcccccccccccccccccccccccccc{"
-        "                            "
-        "                            ";
+        "     s+   r      s   +r     "      //0,0
+        "     s+fg r      s fg+r     "      //0,-0.1
+        "     s+pq tbbbbbbu pq+r     "      //0,-0.2
+        "     s+pq          pq+r     "      //0,-0.3
+        "     s+pq faaaaaag pq+r     "      //0,-0.4
+        "jbbbbw+vw v``ih``w vw+vbbbbk"      //0,-0.5
+        "s++++++++++++pq++++++++++++r"      //0,-0.6
+        "s+faag+faaag+pq+faaag+faag+r"      //0,-0.7
+        "s+v`iq+v```w+vw+v```w+ph`w+r"      //0,-0.8
+        "s#++pq+++++++  +++++++pq++#r"      //0,-0.9
+        "|ag+pq+fg+faaaaaag+fg+pq+fa}"      //0,-1
+        "l`w+vw+pq+v``ih``w+pq+vw+v`m"      //0,-1.1
+        "s++++++pq++++pq++++pq++++++r"      //0,-1.2
+        "s+faaaayxaag+pq+faayxaaaag+r"      //0,-1.3
+        "s+v````````w+vw+v````````w+r"      //0,-1.4
+        "s++++++++++++++++++++++++++r"      //0,-1.5
+        "zcccccccccccccccccccccccccc{"      //0,-1.6
+        "                            "      //0,-1.7
+        "                            ";     //0,-1.8
 
     // Setup
     GameModel gameModel(&mqttClient);
     GameView gameView(&mqttClient);
 
+    // Players
+    Player jugador("robot1",{0,-0.85});
+
     // Configure
     gameModel.setGameView(&gameView);
-    Vector2 coordenadasDeOrigen = {0,0};
-
-    Player jugador(coordenadasDeOrigen, "robot1", 1);
     gameModel.addRobot(&jugador);
-    /*
-    coordenadasDeOrigen = {12,0};
-    Fantasma rojo(coordenadasDeOrigen, "robot2", 7);
-    gameModel.addRobot(&rojo);
-
-    coordenadasDeOrigen = {12,7};
-    Fantasma naranja(coordenadasDeOrigen, "robot3", 9);
-    gameModel.addRobot(&naranja);
-
-    coordenadasDeOrigen = {3,-1};
-    Fantasma cyan(coordenadasDeOrigen, "robot4", 11);
-    gameModel.addRobot(&cyan);
-
-    Fantasma rosa(coordenadasDeOrigen, "robot5", 13);
-    gameModel.addRobot(&rosa);
-    */
     gameModel.start(maze);
 
     while (!WindowShouldClose() && mqttClient.isConnected())
@@ -116,53 +101,28 @@ int main(int, char **)
 
         // Model update
         gameModel.update(deltaTime);
-        
-        if(jugador.IsRobotInPlace())
-        {
-            // Keyboard control
-            if (IsKeyDown(KEY_UP))
-            {
-                jugador.robotDirection = DirectionUp;
-                //jugador.posXY.y++;
-                //jugador.movement(jugador.posXY);
-            }
-            else if (IsKeyDown(KEY_RIGHT))
-            {
-                jugador.robotDirection = DirectionRight;
-                //jugador.posXY.x++;
-                //jugador.movement(jugador.posXY);
-            }
-            else if (IsKeyDown(KEY_DOWN))
-            {
-                jugador.robotDirection = DirectionDown;
-                //jugador.posXY.y--;
-                //jugador.movement(jugador.posXY);
-            }
-            else if (IsKeyDown(KEY_LEFT))
-            {
-                jugador.robotDirection = DirectionLeft;
-                //jugador.posXY.x--;
-                //jugador.movement(jugador.posXY);
-            }
-            else
-            {
-                // Your code goes here...
-            }
-        }
-        
-        //vuelve al origen (facilita las pruebas)
-        if(IsKeyDown(KEY_ZERO))
-        {
-            jugador.reset();
-        }
 
-        if(nextPosition.x > 5 ||nextPosition.x <-5 ||nextPosition.y <-5 ||nextPosition.y > 5 )
+        // Keyboard control
+        if (IsKeyDown(KEY_UP))
         {
-            nextPosition = {0,0};
-            jugador.movement(nextPosition);
+            // Your code goes here...
         }
-
-        //Sleep(500);
+        else if (IsKeyDown(KEY_RIGHT))
+        {
+            // Your code goes here...
+        }
+        else if (IsKeyDown(KEY_DOWN))
+        {
+            // Your code goes here...
+        }
+        else if (IsKeyDown(KEY_LEFT))
+        {
+            // Your code goes here...
+        }
+        else
+        {
+            // Your code goes here...
+        }
 
         gameView.update(deltaTime);
     }

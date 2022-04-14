@@ -51,7 +51,6 @@ public:
 
     virtual void start(MQTTClient* client, GameModel* model);
     void update(float deltaTime);
-    void movement(Vector2 position);
 
 protected:
     // These variables should be set by you...
@@ -59,11 +58,9 @@ protected:
     GameModel *gameModel;
     std::string robotId;
 
-    Vector2 posXY;
-    float speed;
-    Direction robotDirection;
-    int imageIndex;
     Image displayImages;
+
+    Vector2 spawn;
 
     bool isMoving;
     Setpoint setpoint;
@@ -74,8 +71,9 @@ protected:
     Setpoint getSetpoint(Vector2 tilePosition);
     void setSetpoint(Setpoint setpoint);
     void liftTo(Vector3 destination);
-    void setDisplay();
+    void setDisplay(int imageIndex);
     void setEyes(Color leftEye, Color rightEye);
+    Vector3 converter(Vector2 vector);
 };
 
 #endif
