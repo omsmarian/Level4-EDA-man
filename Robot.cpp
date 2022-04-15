@@ -153,7 +153,6 @@ void Robot::movement(Vector2 addCoordinates)
 	this->coordinates.y += addCoordinates.y;
 	this->setpoint.position = this->coordinates;
 	this->setSetpoint(this->setpoint);
-	this->setDisplay(0);
 }
 
 void Robot::setDirection(Direction currentDirection)
