@@ -17,7 +17,6 @@ class GameModel;
 #include "MQTTClient.h"
 #include "GameModel.h"
 
-#define VELOCIDAD 0.64f
 /**
  * @brief Robot controller setpoint.
  * 
@@ -50,8 +49,8 @@ public:
     Robot();
     virtual ~Robot();
 
-    virtual void start(MQTTClient* client, GameModel* model);
-    void update(float deltaTime);
+    virtual void start(MQTTClient* client, GameModel* model) = 0;
+    virtual void update(float deltaTime) = 0;
     void setDirection(Direction currentDirection);
 
 protected:

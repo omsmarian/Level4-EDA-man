@@ -16,6 +16,7 @@
 #include "GameModel.h"
 #include "GameView.h"
 #include "Player.h"
+#include "Red.h"
 
 
 using namespace std;
@@ -81,10 +82,12 @@ int main(int, char **)
 
     // Players
     Player jugador("robot1",{0,-0.85});
+    Red red("robot2",{1,1.3});
 
     // Configure
     gameModel.setGameView(&gameView);
     gameModel.addRobot(&jugador);
+    gameModel.addRobot(&red);
     gameModel.start(maze);
 
     while (!WindowShouldClose() && mqttClient.isConnected())

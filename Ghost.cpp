@@ -1,21 +1,11 @@
-#include "Player.h"
+#include "Ghost.h"
 
-Player::Player(std::string id, Vector2 spawn)
+Ghost::Ghost()
 {
-	this->robotId = id;
-	this->coordinates = this->getTilePosition(this->getSetpoint(spawn));
-
+	this->direction = DirectionUp;
 }
 
-void Player::start(MQTTClient* client, GameModel* model)
-{
-	this->mqttClient = client;
-	this->gameModel = model;
-	this->liftTo(this->converter(this->coordinates));
-	this->setDisplay(1);
-}
-
-void Player::update(float deltaTime)
+void Ghost::update(float deltaTime)
 {
 	Vector2 increment = { 0,0 };
 	if (this->direction == DirectionUp)
@@ -38,15 +28,20 @@ void Player::update(float deltaTime)
 		increment.x = -1 * deltaTime * VELOCIDAD;
 		this->setpoint.rotation = 270;
 	}
-	else if (this->direction == DirectionNone)
-	{
-		increment.x = 0;
-		increment.y = 0;
-	}
 	this->setpoint.position = { this->coordinates.x + increment.x, this->coordinates.y + increment.y };
 
 	if (this->gameModel->isTileFree(this->getTilePosition(this->setpoint)))
-	{
 		this->movement(increment);
-	}
+
+	else if (this->direction == DirectionUp)
+		this->direction = DirectionLeft;
+
+	else if (this->direction == DirectionLeft)
+		this->direction = DirectionRight;
+
+	else if (this->direction == DirectionRight)
+		this->direction = DirectionDown;
+
+	else
+		this->direction = DirectionUp;
 }

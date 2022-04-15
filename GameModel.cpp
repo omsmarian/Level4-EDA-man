@@ -97,6 +97,7 @@ void GameModel::update(float deltaTime)
 
     for (auto robot : robots)
         robot->update(deltaTime);
+    
 }
 
 /**

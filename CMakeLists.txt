@@ -16,7 +16,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     add_link_options(-fsanitize=undefined)
 endif()
 
-add_executable(main main.cpp GameModel.cpp GameView.cpp MQTTClient.cpp Robot.cpp "Player.h" "Player.cpp")
+add_executable(main main.cpp GameModel.cpp GameView.cpp MQTTClient.cpp Robot.cpp "Player.h" "Player.cpp" "Ghost.h" "Ghost.cpp" "Red.h" "Red.cpp")
 
 # Packages
 find_package(raylib CONFIG REQUIRED)

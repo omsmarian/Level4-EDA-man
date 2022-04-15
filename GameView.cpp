@@ -42,7 +42,7 @@ GameView::GameView(MQTTClient *mqttClient)
     time = 0;
 
     blink1Up = false;
-    blinkEnergizers = false;
+    blinkEnergizers = true;
 
     gameViewMessage = GameViewMessageNone;
 }
