@@ -152,6 +152,7 @@ void Robot::movement(Vector2 addCoordinates)
 	this->coordinates.x += addCoordinates.x;
 	this->coordinates.y += addCoordinates.y;
 	this->setpoint.position = this->coordinates;
+	this->isMoving = true;
 	this->setSetpoint(this->setpoint);
 }
 

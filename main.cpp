@@ -39,23 +39,23 @@ int main(int, char **)
     SetTargetFPS(60);
 
     string maze =
-        "                            "
-        "                            "
-        "                            "
-        "jbbbbbbbbbbbbonbbbbbbbbbbbbk"
-        "s++++++++++++pq++++++++++++r"
-        "s+faag+faaag+pq+faaag+faag+r"
-        "s#p  q+p   q+pq+p   q+p  q#r"
-        "s+v``w+v```w+vw+v```w+v``w+r"
-        "s++++++++++++++++++++++++++r"
-        "s+faag+fg+faaaaaag+fg+faag+r"
-        "s+v``w+pq+v``ih``w+pq+v``w+r"
-        "s++++++pq++++pq++++pq++++++r"
-        "zccccg+pxaag pq faayq+fcccc{"
-        "     s+ph``w vw v``iq+r     "
-        "     s+pq          pq+r     "
-        "     s+pq dcc__cce pq+r     "
-        "     s+vw r      s vw+r     "
+        "                            "      //0,1.7 
+        "                            "      //0,1.6
+        "                            "      //0,1.5
+        "jbbbbbbbbbbbbonbbbbbbbbbbbbk"      //0,1.4
+        "s++++++++++++pq++++++++++++r"      //0,1.3
+        "s+faag+faaag+pq+faaag+faag+r"      //0,1.2
+        "s#p  q+p   q+pq+p   q+p  q#r"      //0,1.1
+        "s+v``w+v```w+vw+v```w+v``w+r"      //0,1
+        "s++++++++++++++++++++++++++r"      //0,0.9
+        "s+faag+fg+faaaaaag+fg+faag+r"      //0,0.8
+        "s+v``w+pq+v``ih``w+pq+v``w+r"      //0,0.7
+        "s++++++pq++++pq++++pq++++++r"      //0,0.6
+        "zccccg+pxaag pq faayq+fcccc{"      //0,0.5
+        "     s+ph``w vw v``iq+r     "      //0,0.4
+        "     s+pq          pq+r     "      //0,0.3
+        "     s+pq dcc__cce pq+r     "      //0,0.2
+        "     s+vw r      s vw+r     "      //0,0.1
         "     s+   r      s   +r     "      //0,0
         "     s+fg r      s fg+r     "      //0,-0.1
         "     s+pq tbbbbbbu pq+r     "      //0,-0.2
@@ -81,12 +81,12 @@ int main(int, char **)
     GameView gameView(&mqttClient);
 
     // Players
-    Player jugador("robot1",{0,-0.85});
-    Red red("robot2",{1,1.3});
+//    Player jugador("robot1",{0,-0.85});
+    Red red("robot2",{1.25,1.35});
 
     // Configure
     gameModel.setGameView(&gameView);
-    gameModel.addRobot(&jugador);
+//    gameModel.addRobot(&jugador);
     gameModel.addRobot(&red);
     gameModel.start(maze);
 
@@ -103,10 +103,11 @@ int main(int, char **)
         vector<MQTTMessage> messages = mqttClient.getMessages();
 
         // Model update
-        gameModel.update(deltaTime);
+        if (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyPressed(KEY_SPACE))
+            gameModel.update(deltaTime);
 
         // Keyboard control
-        if (IsKeyDown(KEY_UP))
+        /*if (IsKeyDown(KEY_UP))
         {
             jugador.setDirection(DirectionUp);
         }
@@ -125,7 +126,7 @@ int main(int, char **)
         else
         {
             jugador.setDirection(DirectionNone);
-        }
+        }*/
 
         gameView.update(deltaTime);
     }

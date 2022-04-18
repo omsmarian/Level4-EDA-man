@@ -48,5 +48,6 @@ void Player::update(float deltaTime)
 	if (this->gameModel->isTileFree(this->getTilePosition(this->setpoint)))
 	{
 		this->movement(increment);
+
 	}
 }
