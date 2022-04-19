@@ -2,6 +2,7 @@
 #define GHOST_H
 
 #include "Robot.h"
+#include "raymath.h"
 
 #define VELOCIDAD 0.6f
 
@@ -12,6 +13,8 @@ public:
 
 private:
 	void persecucion(Vector2 destino, float deltaTime);
+	void verification(Vector2 currentLocation);
+	bool banPosition(int i);
 
 protected:
 	Ghost();

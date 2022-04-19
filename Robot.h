@@ -36,11 +36,11 @@ struct Setpoint
  */
 enum Direction
 {
-    DirectionNone,
     DirectionUp,
+    DirectionLeft,
     DirectionRight,
     DirectionDown,
-    DirectionLeft
+    DirectionNone
 };
 
 class Robot

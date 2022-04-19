@@ -11,5 +11,5 @@ void Red::start(MQTTClient* client, GameModel* model)
 	this->mqttClient = client;
 	this->gameModel = model;
 	this->liftTo(this->converter(this->coordinates));
-	this->setDisplay(289);
+	this->setDisplay(17);
 }
