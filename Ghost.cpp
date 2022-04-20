@@ -9,21 +9,31 @@ Ghost::Ghost()
 
 void Ghost::update(float deltaTime)
 {
-	this->persecucion({1.25,1.35}, deltaTime);
-
+	int time = (int)this->timeActual;
+	printf("time = %d\n", time);
+	if(time < 7 )
+		this->persecucion({ 1.25,1.35 }, deltaTime);
+	if ( 7 <= time && time < 20 )
+		this->persecucion({0,-0.25}, deltaTime);
 }
 
 
 
-void Ghost::persecucion(Vector2 destino, float deltaTime)	// arriba, izq, derecha, abajo
+void Ghost::persecucion(Vector2 destino, float deltaTime)			// arriba, izq, derecha, abajo
 {
 	this->destino = destino;
 	this->timeActual += deltaTime;
+	size_t freeTiles = this->searchFreeTiles(this->coordinates);
 
 	if(timeActual >= timeProx)
 	{
-		this->verification(this->coordinates);
-		timeProx = timeActual + 0.1/VELOCIDAD;
+		if (freeTiles > 2)
+			this->verification(this->coordinates);
+		else if (freeTiles <= 2)
+		{
+			this->movimientoMono(this->coordinates);
+		}
+		timeProx = timeActual + 0.1 / VELOCIDAD;
 	}
 
 	Vector2 increment = { 0,0 };
@@ -68,7 +78,7 @@ void Ghost::verification(Vector2 currentLocation)
 	int proxDirection = 0;
 	for (size_t i = 0; i < 4; i++)
 	{
-		if((this->gameModel->isTileFree(this->getTilePosition(prueba[i]))))
+		if(this->gameModel->isTileFree(this->getTilePosition(prueba[i])))
 		{
 			float newNorm = Vector2Distance(prueba[i].position, this->destino);
 			if(norma > newNorm && banPosition(i))
@@ -101,4 +111,44 @@ bool Ghost::banPosition(int i){
 		return false;
 	return true;
 
+}
+
+size_t Ghost::searchFreeTiles(Vector2 currentLocation)
+{
+	Setpoint prueba[4] = { {currentLocation.x,currentLocation.y + 0.1,0},		//arriba
+				{currentLocation.x - 0.1,currentLocation.y,0},				//izquierda
+				{currentLocation.x + 0.1,currentLocation.y,0},					//derecha
+				{currentLocation.x,currentLocation.y - 0.1,0} };					//abajo
+	size_t num = 0;
+	for (size_t i = 0; i < 4; i++)
+	{
+		if ((this->gameModel->isTileFree(this->getTilePosition(prueba[i]))))
+			num++;
+	}
+	return num;
+}
+
+void Ghost::movimientoMono(Vector2 currentLocation)
+{
+	Setpoint prueba[4] = { {currentLocation.x,currentLocation.y + 0.1,0},		//arriba
+			   {currentLocation.x - 0.1,currentLocation.y,0},				//izquierda
+			   {currentLocation.x + 0.1,currentLocation.y,0},					//derecha
+			   {currentLocation.x,currentLocation.y - 0.1,0} };					//abajo
+
+	if ((this->gameModel->isTileFree(this->getTilePosition(prueba[0]))) && banPosition(DirectionUp))
+	{
+		this->direction = DirectionUp;
+	}
+	else if ((this->gameModel->isTileFree(this->getTilePosition(prueba[1]))) && banPosition(DirectionLeft))
+	{
+		this->direction = DirectionLeft;
+	}
+	else if ((this->gameModel->isTileFree(this->getTilePosition(prueba[2]))) && banPosition(DirectionRight))
+	{
+		this->direction = DirectionRight;
+	}
+	else if ((this->gameModel->isTileFree(this->getTilePosition(prueba[3]))) && banPosition(DirectionDown))
+	{
+		this->direction = DirectionDown;
+	}
 }
