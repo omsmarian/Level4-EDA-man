@@ -19,6 +19,8 @@ private:
 protected:
 	Ghost();
 	Vector2 destino;
+	float timeActual;
+	float timeProx;
 };
 
 

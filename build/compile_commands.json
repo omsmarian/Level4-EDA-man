@@ -1,0 +1,42 @@
+[
+{
+  "directory": "C:/EDA/Level 4/Level4/build",
+  "command": "C:\\PROGRA~1\\MINGW-~1\\X86_64~1.0-P\\mingw64\\bin\\X86_64~2.EXE  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\main.dir\\main.cpp.obj -c \"C:\\EDA\\Level 4\\Level4\\main.cpp\"",
+  "file": "C:/EDA/Level 4/Level4/main.cpp"
+},
+{
+  "directory": "C:/EDA/Level 4/Level4/build",
+  "command": "C:\\PROGRA~1\\MINGW-~1\\X86_64~1.0-P\\mingw64\\bin\\X86_64~2.EXE  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\main.dir\\GameModel.cpp.obj -c \"C:\\EDA\\Level 4\\Level4\\GameModel.cpp\"",
+  "file": "C:/EDA/Level 4/Level4/GameModel.cpp"
+},
+{
+  "directory": "C:/EDA/Level 4/Level4/build",
+  "command": "C:\\PROGRA~1\\MINGW-~1\\X86_64~1.0-P\\mingw64\\bin\\X86_64~2.EXE  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\main.dir\\GameView.cpp.obj -c \"C:\\EDA\\Level 4\\Level4\\GameView.cpp\"",
+  "file": "C:/EDA/Level 4/Level4/GameView.cpp"
+},
+{
+  "directory": "C:/EDA/Level 4/Level4/build",
+  "command": "C:\\PROGRA~1\\MINGW-~1\\X86_64~1.0-P\\mingw64\\bin\\X86_64~2.EXE  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\main.dir\\MQTTClient.cpp.obj -c \"C:\\EDA\\Level 4\\Level4\\MQTTClient.cpp\"",
+  "file": "C:/EDA/Level 4/Level4/MQTTClient.cpp"
+},
+{
+  "directory": "C:/EDA/Level 4/Level4/build",
+  "command": "C:\\PROGRA~1\\MINGW-~1\\X86_64~1.0-P\\mingw64\\bin\\X86_64~2.EXE  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\main.dir\\Robot.cpp.obj -c \"C:\\EDA\\Level 4\\Level4\\Robot.cpp\"",
+  "file": "C:/EDA/Level 4/Level4/Robot.cpp"
+},
+{
+  "directory": "C:/EDA/Level 4/Level4/build",
+  "command": "C:\\PROGRA~1\\MINGW-~1\\X86_64~1.0-P\\mingw64\\bin\\X86_64~2.EXE  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\main.dir\\Player.cpp.obj -c \"C:\\EDA\\Level 4\\Level4\\Player.cpp\"",
+  "file": "C:/EDA/Level 4/Level4/Player.cpp"
+},
+{
+  "directory": "C:/EDA/Level 4/Level4/build",
+  "command": "C:\\PROGRA~1\\MINGW-~1\\X86_64~1.0-P\\mingw64\\bin\\X86_64~2.EXE  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\main.dir\\Ghost.cpp.obj -c \"C:\\EDA\\Level 4\\Level4\\Ghost.cpp\"",
+  "file": "C:/EDA/Level 4/Level4/Ghost.cpp"
+},
+{
+  "directory": "C:/EDA/Level 4/Level4/build",
+  "command": "C:\\PROGRA~1\\MINGW-~1\\X86_64~1.0-P\\mingw64\\bin\\X86_64~2.EXE  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\main.dir\\Red.cpp.obj -c \"C:\\EDA\\Level 4\\Level4\\Red.cpp\"",
+  "file": "C:/EDA/Level 4/Level4/Red.cpp"
+}
+]
