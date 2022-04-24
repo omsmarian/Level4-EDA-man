@@ -41,7 +41,7 @@ int main(int, char **)
     SetTargetFPS(60);
 
     string maze =
-        "                            "      //0,1.7 
+        "                            "      //0,1.7             (int)(coordenadas.y * 10) -> 0 
         "                            "      //0,1.6
         "                            "      //0,1.5
         "jbbbbbbbbbbbbonbbbbbbbbbbbbk"      //0,1.4
@@ -86,9 +86,9 @@ int main(int, char **)
     // Players
     Player jugador("robot1",{0,-0.85});
     Red red("robot2",{1.25,1.35});
-    Pink pink("robot3", { -1.15,1.35 });
+    Pink pink("robot3", { -1.25,1.35 });
     Cyan cyan("robot4", { 1.25,-1.45 });
-    Orange orange("robot5", { -1.15 ,-1.45 });
+    Orange orange("robot5", { -1.25 ,-1.45 });
 
     // Configure
     gameModel.setGameView(&gameView);
@@ -115,10 +115,10 @@ int main(int, char **)
         if (IsKeyPressed(KEY_SPACE))
         {
             playFlag = true;
-            gameView.playAudio("backgroundSiren0");
         }
         if(playFlag)
             gameModel.update(deltaTime);
+            gameView.playAudio("backgroundSiren0");
 
         // Keyboard control
         if (IsKeyDown(KEY_UP))

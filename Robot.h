@@ -68,7 +68,7 @@ protected:
 
     Vector2 coordinates;
 
-    Vector3 inicialPosition;
+    Vector2 inicialPosition;
 
     Direction direction;
     bool isMoving;

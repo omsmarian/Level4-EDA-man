@@ -3,7 +3,7 @@
 Cyan::Cyan(std::string robotId, Vector2 spawn)
 {
 	this->robotId = robotId;
-	this->inicialPosition = { spawn.x, 0, spawn.y };
+	this->inicialPosition = spawn;
 	this->coordinates = spawn;
 	this->lastDirection = 0;
 }
@@ -15,7 +15,6 @@ void Cyan::start(MQTTClient* client, GameModel* model)
 	this->gameModel = model;
 	this->movement({ 0,0 });
 	this->setDisplay(21);
-	this->liftTo(this->inicialPosition);
 }
 
 void Cyan::update(float deltaTime)
@@ -26,7 +25,7 @@ void Cyan::update(float deltaTime)
 		this->persecucion({ 1.25,-1.7 }, deltaTime);
 	if (TIME_ARRAY[this->timeIndex] <= this->timeUpdate && this->timeUpdate < (TIME_ARRAY[this->timeIndex] + TIME_ARRAY[this->timeIndex + 1]))
 		this->persecucion(this->getDestinationCyan(), deltaTime);
-	if (this->timeUpdate >= TIME_ARRAY[this->timeIndex + 1])
+	if (this->timeUpdate >= (TIME_ARRAY[this->timeIndex] + TIME_ARRAY[this->timeIndex + 1]))
 	{
 		this->timeIndex += 2;
 		this->timeUpdate = 0;

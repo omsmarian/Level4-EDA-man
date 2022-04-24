@@ -3,7 +3,7 @@
 Red::Red(std::string robotId, Vector2 spawn)
 {
 	this->robotId = robotId;
-	this->inicialPosition = { spawn.x, 0, spawn.y };
+	this->inicialPosition = spawn;
 	this->coordinates = spawn;
 }
 
@@ -13,7 +13,6 @@ void Red::start(MQTTClient* client, GameModel* model)
 	this->gameModel = model;
 	this->movement({ 0,0 });
 	this->setDisplay(17);
-	this->liftTo(this->inicialPosition);
 }
 
 void Red::update(float deltaTime)
