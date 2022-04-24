@@ -11,6 +11,8 @@
 
 #include "Robot.h"
 
+
+
 using namespace std;
 
 /**
@@ -170,4 +172,11 @@ Vector2 Robot::getCoordinates()
 Direction Robot::getDirection()
 {
 	return this->direction;
+}
+void  Robot::resetRobot()
+{
+	this->coordinates = { this->inicialPosition.x, this->inicialPosition.z };
+	this->liftTo(inicialPosition);
+
+
 }

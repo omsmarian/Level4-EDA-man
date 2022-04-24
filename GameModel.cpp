@@ -16,6 +16,7 @@
 
 using namespace std;
 
+const float PROXIMITY_CONSTANT = 0.28;
 const int MAZE_WIDTH = 28;
 const int MAZE_HEIGHT = 36;
 const int MAZE_SIZE = MAZE_WIDTH * MAZE_HEIGHT;
@@ -52,13 +53,16 @@ void GameModel::addRobot(Robot *robot)
 
 /**
  * @brief Resets game model to initial game conditions.
- * 
+ *
  * @param maze A maze
  */
 void GameModel::start(string maze)
 {
     this->maze = maze;
+    this->pointsMaze = this->getPointsMaze(maze);
     this->maze.resize(MAZE_SIZE);
+    this->score = 0;
+    this->energyzerOn = false;
 
     for (auto c : maze)
     {
@@ -86,7 +90,26 @@ void GameModel::start(string maze)
     // Just for testing
     gameView->playAudio("mainStart");
 }
+/*Duplica el laberinto para conseguir los puntos
+*
+*/
+std::string getPointsMaze(std::string originalMaze)
+{
+    std::string pointsMaze = originalMaze;
+    char *placePointer = (char *)&pointsMaze;
 
+    for (int i = 0; i < sizeof(pointsMaze); i++)
+    {
+        if (*placePointer == '+') //finds a point
+            *placePointer = '1';
+        else if (*placePointer == '#') //finds an energizer
+            *placePointer = '2';
+        else
+            *placePointer = '0';
+        placePointer++;
+    }
+    return pointsMaze;
+}
 /**
  * @brief Updates game model for current frame.
  * 
@@ -98,7 +121,43 @@ void GameModel::update(float deltaTime)
 
     for (auto robot : robots)
         robot->update(deltaTime);
-    
+
+    Vector2 playerPosition = robots[0]->getCoordinates();
+    char* placePointer = (char*)&this->pointsMaze;
+    char tile = placePointer[(int)playerPosition.x + (int)playerPosition.y * MAZE_WIDTH];
+
+    if (tile != '0') //finds a point
+    {
+        this->gameView->clearTile((int)playerPosition.x, (int)playerPosition.y);
+        if (tile == '1')
+        {
+            this->remainingDots--;
+            this->score += 10;
+        }
+        if (tile == '2')
+        {
+            this->remainingEnergizers--;
+            this->score += 50;
+            this->energyzerOn = true;
+        }
+        tile = '0';
+    }
+    if (energyzerOn)
+    {
+        frightened();
+
+    }
+    if (viewColision())
+    {
+        this->lives--;
+        resetGame();
+
+    }
+ 
+   
+    this->gameView->setScore(this->score);
+    this->gameView->setLives(this->lives);
+
 }
 
 /**
@@ -130,4 +189,29 @@ Vector2 GameModel::getPosition(int i)
 int GameModel::getPlayerDirection(int i)
 {
     return this->robots[i]->getDirection();
+}
+
+bool GameModel::viewColision()
+{
+    Vector2 playerPosition = getPosition(0);
+
+    for (int i = 1; i < (sizeof(robots)/sizeof(Robot)); i++)
+    {
+        Vector2 ghostPosition = getPosition(i);
+        float distance = Vector2Distance(playerPosition, ghostPosition);
+        if (distance <= PROXIMITY_CONSTANT)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void GameModel::resetGame()
+{
+    for (auto robot : robots)
+    {
+        robot->resetRobot();
+    }
 }

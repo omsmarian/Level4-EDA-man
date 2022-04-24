@@ -49,11 +49,14 @@ public:
     Robot();
     virtual ~Robot();
 
+    void resetRobot();
     virtual void start(MQTTClient* client, GameModel* model) = 0;
     virtual void update(float deltaTime) = 0;
+
     void setDirection(Direction currentDirection);
     Vector2 getCoordinates();
     Direction getDirection();
+
 
 protected:
     // These variables should be set by you...
@@ -65,6 +68,8 @@ protected:
 
     Vector2 coordinates;
 
+    Vector3 inicialPosition;
+
     Direction direction;
     bool isMoving;
     Setpoint setpoint;
@@ -73,11 +78,11 @@ protected:
     Vector2 getTilePosition(Setpoint setpoint);
     Setpoint getSetpoint(Vector2 tilePosition);
     void setSetpoint(Setpoint setpoint);
-    void liftTo(Vector3 destination);
     void setDisplay(int imageIndex);
     void setEyes(Color leftEye, Color rightEye);
     Vector3 converter(Vector2 vector);
     void movement(Vector2 coordinates);
+    void liftTo(Vector3 destination);
 };
 
 #endif

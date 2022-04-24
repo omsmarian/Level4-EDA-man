@@ -2,9 +2,18 @@
 #define GHOST_H
 
 #include "Robot.h"
-#include "raymath.h"
 
 #define VELOCIDAD_GHOST 0.6f
+
+const float TIME_ARRAY[8] = { 7.0,20.0,7.0,20.0,5.0,20.0,5.0,999999999.0 };
+
+enum ghostMovement 
+{
+	Chase,
+	Scatter,
+	Fightened
+};
+
 
 class Ghost : public Robot
 {
@@ -25,6 +34,8 @@ protected:
 	float timeProx;
 	float timeUpdate;
 	bool movementState;
+	int typeOfMovement;
+	int timeIndex;
 };
 
 

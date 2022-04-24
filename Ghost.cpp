@@ -7,6 +7,7 @@ Ghost::Ghost()
 	this->timeUpdate = 0;
 	this->direction = DirectionNone;
 	this->setpoint.rotation = 0;
+	this->timeIndex = 0;
 }
 
 void Ghost::persecucion(Vector2 destino, float deltaTime)			// arriba, izq, derecha, abajo

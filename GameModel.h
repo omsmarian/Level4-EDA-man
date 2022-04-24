@@ -30,6 +30,7 @@ enum GameState
 #include <vector>
 
 #include <raylib.h>
+#include "raymath.h"
 
 #include "MQTTClient.h"
 
@@ -39,11 +40,11 @@ enum GameState
 class GameModel
 {
 public:
-    GameModel(MQTTClient *mqttClient);
+    GameModel(MQTTClient* mqttClient);
 
-    void setGameView(GameView *gameView);
+    void setGameView(GameView* gameView);
 
-    void addRobot(Robot *robot);
+    void addRobot(Robot* robot);
 
     void start(std::string maze);
     void update(float deltaTime);
@@ -53,15 +54,26 @@ public:
     Vector2 getPosition(int i);
     int getPlayerDirection(int i);
 
+    bool viewColision();
+
+    void resetGame();
+
 private:
-    MQTTClient *mqttClient;
-    GameView *gameView;
+    MQTTClient* mqttClient;
+    GameView* gameView;
+
+    std::string getPointsMaze(std::string);
 
     std::string maze;
-    std::vector<Robot *> robots;
+    std::string pointsMaze;
+    std::vector<Robot*> robots;
 
     int gameState;
     float gameStateTime;
+
+    int score;
+
+    bool energyzerOn;
 
     int remainingDots;
     int remainingEnergizers;

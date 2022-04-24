@@ -3,15 +3,15 @@
 Player::Player(std::string id, Vector2 spawn)
 {
 	this->robotId = id;
-	this->coordinates = this->getTilePosition(this->getSetpoint(spawn));
-
+	this->inicialPosition = { spawn.x, 0, spawn.y };
+	this->coordinates = spawn;
 }
 
 void Player::start(MQTTClient* client, GameModel* model)
 {
 	this->mqttClient = client;
 	this->gameModel = model;
-	this->liftTo(this->converter(this->coordinates));
+	this->liftTo(this->inicialPosition);
 	this->setDisplay(1);
 }
 
