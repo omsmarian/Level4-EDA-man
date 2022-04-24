@@ -4,27 +4,22 @@ Ghost::Ghost()
 {
 	this->timeActual = 0;
 	this->timeProx = 0;
+	this->timeUpdate = 0;
 	this->direction = DirectionNone;
+	this->setpoint.rotation = 0;
 }
-
-void Ghost::update(float deltaTime)
-{
-	int time = (int)this->timeActual;
-	printf("time = %d\n", time);
-	if(time < 7 )
-		this->persecucion({ 1.25,1.35 }, deltaTime);
-	if ( 7 <= time && time < 20 )
-		this->persecucion({0,-0.25}, deltaTime);
-}
-
-
 
 void Ghost::persecucion(Vector2 destino, float deltaTime)			// arriba, izq, derecha, abajo
 {
 	this->destino = destino;
 	this->timeActual += deltaTime;
 	size_t freeTiles = this->searchFreeTiles(this->coordinates);
-
+	/*int corX = (int)(this->coordinates.x * 10);
+	int corY = (int)(this->coordinates.y * 10);
+	float teselaX = corX / 10;
+	float teselaY = corY / 10;
+	if((teselaX + 0.1 <= this->coordinates.x) || 
+		(teselaY + 0.1 > this->coordinates.y))*/
 	if(timeActual >= timeProx)
 	{
 		if (freeTiles > 2)
@@ -33,7 +28,7 @@ void Ghost::persecucion(Vector2 destino, float deltaTime)			// arriba, izq, dere
 		{
 			this->movimientoMono(this->coordinates);
 		}
-		timeProx = timeActual + 0.1 / VELOCIDAD;
+		timeProx = timeActual + 0.1 / VELOCIDAD_GHOST;
 	}
 
 	Vector2 increment = { 0,0 };
@@ -41,28 +36,28 @@ void Ghost::persecucion(Vector2 destino, float deltaTime)			// arriba, izq, dere
 	if (!(this->isMoving) && this->direction == DirectionUp)	//subir			
 	{
 		printf("up\n");
-		increment.y = deltaTime * VELOCIDAD;
+		increment.y = deltaTime * VELOCIDAD_GHOST;
 		this->movement(increment);
 	}
 	increment = { 0,0 };
 	if (!(this->isMoving) && this->direction == DirectionLeft)	//izquierda
 	{
 		printf("izq\n");
-		increment.x = -deltaTime * VELOCIDAD;
+		increment.x = -deltaTime * VELOCIDAD_GHOST;
 		this->movement(increment);
 	}
 	increment = { 0,0 };
 	if (!(this->isMoving) && this->direction == DirectionRight)	//derecha
 	{
 		printf("der\n");
-		increment.x = deltaTime * VELOCIDAD;
+		increment.x = deltaTime * VELOCIDAD_GHOST;
 		this->movement(increment);
 	}
 	increment = { 0,0 };
 	if (!(this->isMoving) && this->direction == DirectionDown)	//abajo
 	{
 		printf("abajo\n");
-		increment.y = -deltaTime * VELOCIDAD;
+		increment.y = -deltaTime * VELOCIDAD_GHOST;
 		this->movement(increment);
 	}
 }

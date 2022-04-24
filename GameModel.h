@@ -50,6 +50,9 @@ public:
 
     bool isTileFree(Vector2 position);
 
+    Vector2 getPosition(int i);
+    int getPlayerDirection(int i);
+
 private:
     MQTTClient *mqttClient;
     GameView *gameView;

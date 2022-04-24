@@ -3,7 +3,7 @@
 
 #include "Robot.h"
 
-#define VELOCIDAD 0.64f
+#define VELOCIDAD_PLAYER 0.64f
 
 class Player : public Robot
 {

@@ -160,3 +160,14 @@ void Robot::setDirection(Direction currentDirection)
 {
 	this->direction = currentDirection;
 }
+
+
+Vector2 Robot::getCoordinates()
+{
+	return this->coordinates;
+}
+
+Direction Robot::getDirection()
+{
+	return this->direction;
+}

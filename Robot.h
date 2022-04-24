@@ -52,6 +52,8 @@ public:
     virtual void start(MQTTClient* client, GameModel* model) = 0;
     virtual void update(float deltaTime) = 0;
     void setDirection(Direction currentDirection);
+    Vector2 getCoordinates();
+    Direction getDirection();
 
 protected:
     // These variables should be set by you...

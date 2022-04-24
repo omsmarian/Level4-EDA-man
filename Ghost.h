@@ -4,15 +4,13 @@
 #include "Robot.h"
 #include "raymath.h"
 
-#define VELOCIDAD 0.6f
+#define VELOCIDAD_GHOST 0.6f
 
 class Ghost : public Robot
 {
 public:
-	void update(float deltaTime);
 
 private:
-	void persecucion(Vector2 destino, float deltaTime);
 	void verification(Vector2 currentLocation);
 	bool banPosition(int i);
 	size_t searchFreeTiles(Vector2 currentLocation);
@@ -20,9 +18,13 @@ private:
 
 protected:
 	Ghost();
+	
+	void persecucion(Vector2 destino, float deltaTime);
 	Vector2 destino;
 	float timeActual;
 	float timeProx;
+	float timeUpdate;
+	bool movementState;
 };
 
 

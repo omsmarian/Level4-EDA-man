@@ -79,6 +79,7 @@ void GameModel::start(string maze)
     gameView->setLives(lives);
     gameView->setEatenFruits(eatenFruits);
 
+
     for (auto robot : robots)
         robot->start(this->mqttClient, this);
 
@@ -118,4 +119,15 @@ bool GameModel::isTileFree(Vector2 tilePosition)
     char tile = maze[(int) tilePosition.y * MAZE_WIDTH + (int) tilePosition.x];
 
     return (tile == ' ') || (tile == '+') || (tile == '#');
+}
+
+
+Vector2 GameModel::getPosition(int i)
+{
+    return this->robots[i]->getCoordinates();
+}
+
+int GameModel::getPlayerDirection(int i)
+{
+    return this->robots[i]->getDirection();
 }

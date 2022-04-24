@@ -20,22 +20,22 @@ void Player::update(float deltaTime)
 	Vector2 increment = { 0,0 };
 	if (this->direction == DirectionUp)
 	{
-		increment.y = deltaTime * VELOCIDAD;
+		increment.y = deltaTime * VELOCIDAD_PLAYER;
 		this->setpoint.rotation = 0;
 	}
 	else if (this->direction == DirectionDown)
 	{
-		increment.y = -deltaTime * VELOCIDAD;
+		increment.y = -deltaTime * VELOCIDAD_PLAYER;
 		this->setpoint.rotation = 180;
 	}
 	else if (this->direction == DirectionRight)
 	{
-		increment.x = deltaTime * VELOCIDAD;
+		increment.x = deltaTime * VELOCIDAD_PLAYER;
 		this->setpoint.rotation = 90;
 	}
 	else if (this->direction == DirectionLeft)
 	{
-		increment.x = -1 * deltaTime * VELOCIDAD;
+		increment.x = -1 * deltaTime * VELOCIDAD_PLAYER;
 		this->setpoint.rotation = 270;
 	}
 	else if (this->direction == DirectionNone)
@@ -48,6 +48,5 @@ void Player::update(float deltaTime)
 	if (this->gameModel->isTileFree(this->getTilePosition(this->setpoint)))
 	{
 		this->movement(increment);
-
 	}
 }

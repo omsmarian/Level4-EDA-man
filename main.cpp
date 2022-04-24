@@ -17,7 +17,9 @@
 #include "GameView.h"
 #include "Player.h"
 #include "Red.h"
-
+#include "Pink.h"
+#include "Cyan.h"
+#include "Orange.h"
 
 using namespace std;
 
@@ -77,17 +79,24 @@ int main(int, char **)
         "                            ";     //0,-1.8
 
     // Setup
+    bool playFlag = false;
     GameModel gameModel(&mqttClient);
     GameView gameView(&mqttClient);
 
     // Players
-//    Player jugador("robot1",{0,-0.85});
+    Player jugador("robot1",{0,-0.85});
     Red red("robot2",{1.25,1.35});
+    Pink pink("robot3", { -1.15,1.35 });
+    Cyan cyan("robot4", { 1.25,-1.45 });
+    Orange orange("robot5", { -1.15 ,-1.45 });
 
     // Configure
     gameModel.setGameView(&gameView);
-//    gameModel.addRobot(&jugador);
+    gameModel.addRobot(&jugador);
     gameModel.addRobot(&red);
+    gameModel.addRobot(&pink);
+    gameModel.addRobot(&cyan);
+    gameModel.addRobot(&orange);
     gameModel.start(maze);
 
     while (!WindowShouldClose() && mqttClient.isConnected())
@@ -103,11 +112,16 @@ int main(int, char **)
         vector<MQTTMessage> messages = mqttClient.getMessages();
 
         // Model update
-        if (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyPressed(KEY_SPACE))
+        if (IsKeyPressed(KEY_SPACE))
+        {
+            playFlag = true;
+            gameView.playAudio("backgroundSiren0");
+        }
+        if(playFlag)
             gameModel.update(deltaTime);
 
         // Keyboard control
-        /*if (IsKeyDown(KEY_UP))
+        if (IsKeyDown(KEY_UP))
         {
             jugador.setDirection(DirectionUp);
         }
@@ -126,7 +140,7 @@ int main(int, char **)
         else
         {
             jugador.setDirection(DirectionNone);
-        }*/
+        }
 
         gameView.update(deltaTime);
     }
