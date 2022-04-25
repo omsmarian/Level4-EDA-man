@@ -20,7 +20,6 @@ void Cyan::start(MQTTClient* client, GameModel* model)
 void Cyan::update(float deltaTime)
 {
 	this->timeUpdate += deltaTime;
-	printf("time = %f\n", this->timeUpdate);
 	if (this->timeUpdate < TIME_ARRAY[this->timeIndex])
 		this->persecucion({ 1.25,-1.7 }, deltaTime);
 	if (TIME_ARRAY[this->timeIndex] <= this->timeUpdate && this->timeUpdate < (TIME_ARRAY[this->timeIndex] + TIME_ARRAY[this->timeIndex + 1]))

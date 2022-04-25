@@ -93,10 +93,10 @@ int main(int, char **)
     // Configure
     gameModel.setGameView(&gameView);
     gameModel.addRobot(&jugador);
-    gameModel.addRobot(&red);
+   /* gameModel.addRobot(&red);
     gameModel.addRobot(&pink);
     gameModel.addRobot(&cyan);
-    gameModel.addRobot(&orange);
+    gameModel.addRobot(&orange);*/
     gameModel.start(maze);
 
     while (!WindowShouldClose() && mqttClient.isConnected())
@@ -115,10 +115,13 @@ int main(int, char **)
         if (IsKeyPressed(KEY_SPACE))
         {
             playFlag = true;
+            //gameView.playAudio("backgroundSiren0");
         }
-        if(playFlag)
+        if (playFlag)
             gameModel.update(deltaTime);
-            gameView.playAudio("backgroundSiren0");
+
+        if (gameModel.viewColision())
+            playFlag = false;
 
         // Keyboard control
         if (IsKeyDown(KEY_UP))

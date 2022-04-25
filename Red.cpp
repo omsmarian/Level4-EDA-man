@@ -18,7 +18,6 @@ void Red::start(MQTTClient* client, GameModel* model)
 void Red::update(float deltaTime)
 {
 	this->timeUpdate += deltaTime;
-	printf("time = %f\n", this->timeUpdate);
 	if (this->timeUpdate < TIME_ARRAY[this->timeIndex])
 		this->persecucion({ 1.15,1.5 }, deltaTime);
 	if (TIME_ARRAY[this->timeIndex] <= this->timeUpdate && this->timeUpdate < (TIME_ARRAY[this->timeIndex] + TIME_ARRAY[this->timeIndex + 1]))

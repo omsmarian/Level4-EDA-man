@@ -165,7 +165,9 @@ void GameView::clearTile(int x, int y)
         if (!((energizer.x == x) && (energizer.y == y)))
             newEnergizers.push_back(energizer);
     }
-
+    printf("x = %d, y = %d\n", x, y);
+    //-1 * ((int)(playerPosition.y * 10) - 17)
+    printf("coorX = %f, coorY = %f\n", ((((float)x * -1) + 14)/10), ((((float)y * -1) + 17) / 10));
     energizers = newEnergizers;
 }
 

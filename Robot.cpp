@@ -175,6 +175,6 @@ Direction Robot::getDirection()
 }
 void  Robot::resetRobot()
 {
-	this->coordinates = { this->inicialPosition.x, this->inicialPosition.x };
+	this->coordinates = { this->inicialPosition.x, this->inicialPosition.y };
 	this->movement({ 0,0 });
 }

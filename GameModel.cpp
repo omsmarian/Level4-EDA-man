@@ -16,7 +16,7 @@
 
 using namespace std;
 
-const float PROXIMITY_CONSTANT = 0.28;
+#define PROXIMITY_CONSTANT  0.18f
 const int MAZE_WIDTH = 28;
 const int MAZE_HEIGHT = 36;
 const int MAZE_SIZE = MAZE_WIDTH * MAZE_HEIGHT;
@@ -101,16 +101,12 @@ std::string GameModel::getPointsMaze(std::string originalMaze)
 	{
 		placePointer = &pointsMaze[i];
 
-		for (int i = 0; i < sizeof(pointsMaze); i++)
-		{
-			if (*placePointer == '+') //finds a point
-				*placePointer = '1';
-			else if (*placePointer == '#') //finds an energizer
-				*placePointer = '2';
-			else
-				*placePointer = '0';
-			placePointer++;
-		}
+		if (*placePointer == '+')		//finds a point
+			*placePointer = '1';
+		else if (*placePointer == '#')		//finds an energizer
+			*placePointer = '2';
+		else
+			*placePointer = '0';
 	}
 	return pointsMaze;
 }
@@ -123,30 +119,33 @@ void GameModel::update(float deltaTime)
 {
 	gameStateTime += deltaTime;
 
+	int x, y;
+
 	for (auto robot : robots)
 		robot->update(deltaTime);
 
 
 	Vector2 playerPosition = robots[0]->getCoordinates();
+	//printf("x = %f , y = %f\n", playerPosition.x, playerPosition.y);
 
-	char tile = this->pointsMaze[-1 * ((int)(playerPosition.y * 10) - 17) * MAZE_WIDTH +
-		-1 * ((int)(playerPosition.x * 10) - 14)];
+	char* tile = &(this->pointsMaze[-1 * ((int)(playerPosition.y * 10) - 18) * MAZE_WIDTH + ( - 1 * ((int)(playerPosition.x * 10) - 14))]);
 
-	if (tile != '0') //finds a point
+	if (*tile != '0')			//finds a point
 	{
-		this->gameView->clearTile((int)(playerPosition.x * 10), (int)(playerPosition.y * 10));
-		if (tile == '1')
+		printf("x = %f , y = %f\n", playerPosition.x, playerPosition.y);
+		this->gameView->clearTile(27 - ( - 1 * ((int)(playerPosition.x * 10) - 14)), -1 * ((int)(playerPosition.y * 10) - 18));
+		if (*tile == '1')
 		{
 			this->remainingDots--;
 			this->score += 10;
 		}
-		if (tile == '2')
+		else if (*tile == '2')
 		{
 			this->remainingEnergizers--;
 			this->score += 50;
 			this->energyzerOn = true;
 		}
-		tile = '0';
+		*tile = '0';
 	}
 	if (energyzerOn)
 	{

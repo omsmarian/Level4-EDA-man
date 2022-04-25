@@ -36,28 +36,24 @@ void Ghost::persecucion(Vector2 destino, float deltaTime)			// arriba, izq, dere
 	this->isMoving = false;
 	if (!(this->isMoving) && this->direction == DirectionUp)	//subir			
 	{
-		printf("up\n");
 		increment.y = deltaTime * VELOCIDAD_GHOST;
 		this->movement(increment);
 	}
 	increment = { 0,0 };
 	if (!(this->isMoving) && this->direction == DirectionLeft)	//izquierda
 	{
-		printf("izq\n");
 		increment.x = -deltaTime * VELOCIDAD_GHOST;
 		this->movement(increment);
 	}
 	increment = { 0,0 };
 	if (!(this->isMoving) && this->direction == DirectionRight)	//derecha
 	{
-		printf("der\n");
 		increment.x = deltaTime * VELOCIDAD_GHOST;
 		this->movement(increment);
 	}
 	increment = { 0,0 };
 	if (!(this->isMoving) && this->direction == DirectionDown)	//abajo
 	{
-		printf("abajo\n");
 		increment.y = -deltaTime * VELOCIDAD_GHOST;
 		this->movement(increment);
 	}
