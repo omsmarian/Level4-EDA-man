@@ -145,26 +145,39 @@ void GameModel::update(float deltaTime)
 			this->remainingEnergizers--;
 			this->score += 50;
 			this->energyzerOn = true;
+			this->energizerTime = this->gameStateTime;
 		}
 		*tile = '0';
 	}
 	if (energyzerOn)
 	{
-		//    frightened();
-
+		//frightened();
+		if(this->gameStateTime>=(this->energizerTime + 7.0))
+		{
+			this->energyzerOn=false;
+		}
 	}
-	if (viewColision())
+	int robotColision=viewColision();
+	if (robotColision)
 	{
-		this->lives--;
-		resetGame();
-
+		static int quantityOfEatenGhosts;
+		if(this->energyzerOn) //player chases ghosts
+		{
+			quantityOfEatenGhosts++;
+			this->score += 200*quantityOfEatenGhosts;
+			this->robots[robotColision]->resetRobot();
+		}
+		else
+		{
+			quantityOfEatenGhosts=0;
+			this->lives--;
+			resetGame();
+		}
 	}
-
-
 	this->gameView->setScore(this->score);
 	this->gameView->setLives(this->lives);
-
 }
+
 
 /**
  * @brief Determine if a tile is free.
@@ -197,7 +210,7 @@ int GameModel::getPlayerDirection(int i)
 	return this->robots[i]->getDirection();
 }
 
-bool GameModel::viewColision()
+int GameModel::viewColision()
 {
 	Vector2 playerPosition = getPosition(0);
 
@@ -207,11 +220,11 @@ bool GameModel::viewColision()
 		float distance = Vector2Distance(playerPosition, ghostPosition);
 		if (distance <= PROXIMITY_CONSTANT)
 		{
-			return true;
+			return i;
 		}
 	}
 
-	return false;
+	return 0;
 }
 
 void GameModel::resetGame()

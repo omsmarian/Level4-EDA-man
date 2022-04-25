@@ -54,7 +54,7 @@ public:
     Vector2 getPosition(int i);
     int getPlayerDirection(int i);
 
-    bool viewColision();
+    int viewColision();
 
     void resetGame();
 
@@ -74,6 +74,7 @@ private:
     int score;
 
     bool energyzerOn;
+    float energizerTime;
 
     int remainingDots;
     int remainingEnergizers;
