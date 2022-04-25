@@ -124,16 +124,17 @@ void GameModel::update(float deltaTime)
 	for (auto robot : robots)
 		robot->update(deltaTime);
 
-
-	Vector2 playerPosition = robots[0]->getCoordinates();
+	Setpoint playerSetPoint = { robots[0]->getCoordinates(),0 };
+	Vector2 playerPosition = robots[0]->getTilePosition(playerSetPoint);
+	playerPosition.y -= 0.05;
 	//printf("x = %f , y = %f\n", playerPosition.x, playerPosition.y);
 
-	char* tile = &(this->pointsMaze[-1 * ((int)(playerPosition.y * 10) - 18) * MAZE_WIDTH + ( - 1 * ((int)(playerPosition.x * 10) - 14))]);
+	char* tile = &(this->pointsMaze[MAZE_WIDTH*((int)playerPosition.y) + ((int)playerPosition.x)]);
 
-	if (*tile != '0')			//finds a point
+	if (*tile != '0')           //finds a point
 	{
-		printf("x = %f , y = %f\n", playerPosition.x, playerPosition.y);
-		this->gameView->clearTile(27 - ( - 1 * ((int)(playerPosition.x * 10) - 14)), -1 * ((int)(playerPosition.y * 10) - 18));
+		//printf("x = %f , y = %f\n", playerPosition.x, playerPosition.y);      
+		this->gameView->clearTile((int)playerPosition.x , (int) playerPosition.y);
 		if (*tile == '1')
 		{
 			this->remainingDots--;

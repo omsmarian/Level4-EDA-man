@@ -54,6 +54,7 @@ public:
     virtual void update(float deltaTime) = 0;
 
     void setDirection(Direction currentDirection);
+    Vector2 getTilePosition(Setpoint setpoint);
     Vector2 getCoordinates();
     Direction getDirection();
 
@@ -75,7 +76,7 @@ protected:
     Setpoint setpoint;
 
     // Add your variables here...
-    Vector2 getTilePosition(Setpoint setpoint);
+    
     Setpoint getSetpoint(Vector2 tilePosition);
     void setSetpoint(Setpoint setpoint);
     void setDisplay(int imageIndex);
