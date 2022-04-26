@@ -22,7 +22,7 @@ void Ghost::persecucion(Vector2 destino, float deltaTime)
 			this->verification(this->coordinates);
 		else if (freeTiles <= 2)
 		{
-			this->movimientoMono(this->coordinates);
+			this->basicMovement(this->coordinates);
 		}
 		timeProx = timeActual + 0.1 / VELOCIDAD_GHOST;
 	}
@@ -115,7 +115,7 @@ size_t Ghost::searchFreeTiles(Vector2 currentLocation)
 	return num;
 }
 
-void Ghost::movimientoMono(Vector2 currentLocation)
+void Ghost::basicMovement(Vector2 currentLocation)
 {
 	Setpoint prueba[4] = { {currentLocation.x,currentLocation.y + 0.1,0},		//arriba
 			   {currentLocation.x - 0.1,currentLocation.y,0},				//izquierda

@@ -73,7 +73,7 @@ private:
     std::vector<Robot*> robots;
 
     
-    float gameStateTime;
+    float gameStateTime = 0;
 
     int score;
 

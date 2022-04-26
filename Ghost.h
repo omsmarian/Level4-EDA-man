@@ -23,7 +23,7 @@ private:
 	void verification(Vector2 currentLocation);
 	bool banPosition(int i);
 	size_t searchFreeTiles(Vector2 currentLocation);
-	void movimientoMono(Vector2 currentLocation);
+	void basicMovement(Vector2 currentLocation);
 
 protected:
 	Ghost();

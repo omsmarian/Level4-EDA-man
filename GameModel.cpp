@@ -149,12 +149,14 @@ void GameModel::update(float deltaTime)
 			this->remainingEnergizers--;
 			this->score += 50;
 			this->energyzerOn = true;
-			this->energizerTime = this->gameStateTime;
+			energizerTime = gameStateTime;
 		}
 		*tile = '0';
 	}
 	if (energyzerOn)
 	{
+		printf("energizer time : %f\n", energizerTime);
+		printf("game time : %f\n", gameStateTime);
 		if (this->gameStateTime >= (this->energizerTime + 7.0))
 		{
 			this->energyzerOn = false;
@@ -164,8 +166,8 @@ void GameModel::update(float deltaTime)
 	int robotColision = viewColision();
 	if (robotColision)
 	{
-		static int quantityOfEatenGhosts;
-		if (this->energyzerOn) //player chases ghosts
+		int quantityOfEatenGhosts = 0;
+		if (this->energyzerOn)					//player chases ghosts
 		{
 			quantityOfEatenGhosts++;
 			this->score += 200 * quantityOfEatenGhosts;
@@ -173,7 +175,6 @@ void GameModel::update(float deltaTime)
 		}
 		else
 		{
-			quantityOfEatenGhosts = 0;
 			this->lives--;
 			resetGame();
 			this->gameView->setMessage(GameViewMessageReady);

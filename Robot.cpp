@@ -98,9 +98,9 @@ void Robot::liftTo(Vector3 destination)
 	*((float*)&payload[8]) = destination.z;
 
 	mqttClient->publish("hook/" + this->robotId + "/cmd", payload);
+	this->gameModel->delay(6);
 
 	printf("LIFTING ROBOT \n");
-	this->gameModel->delay(6);
 }
 
 /**
@@ -200,6 +200,5 @@ Direction Robot::getDirection()
 void  Robot::resetRobot()
 {
 	this->coordinates = { this->inicialPosition.x, this->inicialPosition.y };
-	this->setSetpoint({ this->inicialPosition.x, this->inicialPosition.y, 0 });
-	this->liftTo(this->converter(this->coordinates));
+	this->setSetpoint({ this->coordinates, 0 });
 }
