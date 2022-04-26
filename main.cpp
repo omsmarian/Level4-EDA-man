@@ -23,6 +23,12 @@
 
 using namespace std;
 
+/*
+* Updates the direction of the player
+* given by the input state
+*/
+void updateInput (Player* player);
+
 int main(int, char **)
 {
     MQTTClient mqttClient("controller");
@@ -85,20 +91,21 @@ int main(int, char **)
 
     // Players
     Player jugador("robot1",{0,-0.85});
-    Red red("robot2",{1.25,1.35});
-    Pink pink("robot3", { -1.25,1.35 });
-    Cyan cyan("robot4", { 1.25,-1.45 });
-    Orange orange("robot5", { -1.25 ,-1.45 });
+    Red red("robot2",{1.2,1.3});
+    Pink pink("robot3", { -1.2,1.3 });
+    Cyan cyan("robot4", { 1.2,-1.4 });
+    Orange orange("robot5", { -1.2 ,-1.4 });
 
     // Configure
-    gameModel.setGameView(&gameView);
+    
     gameModel.addRobot(&jugador);
     gameModel.addRobot(&red);
-    //gameModel.addRobot(&pink);
-   // gameModel.addRobot(&cyan);
-   //gameModel.addRobot(&orange);
-    gameModel.start(maze);
+    gameModel.addRobot(&pink);
+    gameModel.addRobot(&cyan);
+    gameModel.addRobot(&orange);
+    gameModel.setGameView(&gameView);
 
+    //game loop
     while (!WindowShouldClose() && mqttClient.isConnected())
     {
         float deltaTime = (float)GetFrameTime();
@@ -109,46 +116,68 @@ int main(int, char **)
         DrawText("EDAPark Controller", 225, 220, 20, LIGHTGRAY);
         EndDrawing();
 
-        vector<MQTTMessage> messages = mqttClient.getMessages();
-
-        // Model update
-        if (IsKeyPressed(KEY_SPACE))
+        switch (gameModel.gameState)
         {
-            playFlag = true;
-            //gameView.playAudio("backgroundSiren0");
-        }
-        if (playFlag)
-            gameModel.update(deltaTime);
+        case GameStart:
 
-        if (gameModel.viewColision())
-            playFlag = false;
+            gameModel.start(maze);
+            break;
+
+        case GameStarting:
+            if (IsKeyPressed(KEY_SPACE))
+            {
+                gameModel.gameState = GamePlaying;
+            }
+            break;
+
+        case GamePlaying:
+            gameModel.update(deltaTime);
+            break;
+
+        case GameEnding:
+            gameView.setMessage(GameViewMessagePlayAgain);
+
+            if (IsKeyPressed(KEY_SPACE))
+            {
+                gameModel.gameState = GameStart;
+            }
+
+            break;
+
+        }
 
         // Keyboard control
-        if (IsKeyDown(KEY_UP))
-        {
-            jugador.setDirection(DirectionUp);
-        }
-        else if (IsKeyDown(KEY_RIGHT))
-        {
-            jugador.setDirection(DirectionRight);
-        }
-        else if (IsKeyDown(KEY_DOWN))
-        {
-            jugador.setDirection(DirectionDown);
-        }
-        else if (IsKeyDown(KEY_LEFT))
-        {
-            jugador.setDirection(DirectionLeft);
-        }
-        else
-        {
-            jugador.setDirection(DirectionNone);
-        }
-
+        
+        updateInput(&jugador);
         gameView.update(deltaTime);
     }
 
     CloseWindow();
 
     cout << "Disconnected." << endl;
+}
+
+
+void updateInput (Player* player)
+{
+    if (IsKeyDown(KEY_UP))
+    {
+        player->setDirection(DirectionUp);
+    }
+    else if (IsKeyDown(KEY_RIGHT))
+    {
+        player->setDirection(DirectionRight);
+    }
+    else if (IsKeyDown(KEY_DOWN))
+    {
+        player->setDirection(DirectionDown);
+    }
+    else if (IsKeyDown(KEY_LEFT))
+    {
+        player->setDirection(DirectionLeft);
+    }
+    else
+    {
+        player->setDirection(DirectionNone);
+    }
 }

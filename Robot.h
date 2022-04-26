@@ -49,7 +49,7 @@ public:
     Robot();
     virtual ~Robot();
 
-    void resetRobot();
+    void resetRobot(Vector2 actualPlace);
     virtual void start(MQTTClient* client, GameModel* model) = 0;
     virtual void update(float deltaTime) = 0;
 
@@ -57,13 +57,15 @@ public:
     Vector2 getTilePosition(Setpoint setpoint);
     Vector2 getCoordinates();
     Direction getDirection();
+    void movement(Vector2 coordinates);
+    
+    std::string robotId;
+    Vector2 realPosition;
 
 
 protected:
-    // These variables should be set by you...
     MQTTClient *mqttClient;
     GameModel *gameModel;
-    std::string robotId;
 
     Image displayImages;
 
@@ -75,15 +77,12 @@ protected:
     bool isMoving;
     Setpoint setpoint;
 
-    // Add your variables here...
-    
     Setpoint getSetpoint(Vector2 tilePosition);
     void setSetpoint(Setpoint setpoint);
     void setDisplay(int imageIndex);
     void setEyes(Color leftEye, Color rightEye);
     Vector3 converter(Vector2 vector);
-    void movement(Vector2 coordinates);
-    void liftTo(Vector3 destination);
+    void liftTo(Vector3 destination, Vector2 origin);
 };
 
 #endif

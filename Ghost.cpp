@@ -10,17 +10,12 @@ Ghost::Ghost()
 	this->timeIndex = 0;
 }
 
-void Ghost::persecucion(Vector2 destino, float deltaTime)			// arriba, izq, derecha, abajo
+void Ghost::persecucion(Vector2 destino, float deltaTime)
 {
 	this->destino = destino;
 	this->timeActual += deltaTime;
 	size_t freeTiles = this->searchFreeTiles(this->coordinates);
-	/*int corX = (int)(this->coordinates.x * 10);
-	int corY = (int)(this->coordinates.y * 10);
-	float teselaX = corX / 10;
-	float teselaY = corY / 10;
-	if((teselaX + 0.1 <= this->coordinates.x) || 
-		(teselaY + 0.1 > this->coordinates.y))*/
+
 	if(timeActual >= timeProx)
 	{
 		if (freeTiles > 2)

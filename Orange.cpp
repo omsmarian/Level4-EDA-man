@@ -12,8 +12,8 @@ void Orange::start(MQTTClient* client, GameModel* model)
 {
 	this->mqttClient = client;
 	this->gameModel = model;
-	this->movement({ 0,0 });
 	this->setDisplay(23);
+	this->liftTo({this->inicialPosition.x, 0, this->inicialPosition.y}, {1.4, -1.4});
 }
 
 void Orange::update(float deltaTime)

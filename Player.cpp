@@ -11,8 +11,8 @@ void Player::start(MQTTClient* client, GameModel* model)
 {
 	this->mqttClient = client;
 	this->gameModel = model;
-	this->liftTo(this->converter(this->coordinates));
 	this->setDisplay(1);
+	this->liftTo(this->converter(this->coordinates), {1.4, -1.4});
 }
 
 void Player::update(float deltaTime)

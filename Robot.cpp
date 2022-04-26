@@ -22,7 +22,7 @@ using namespace std;
 Robot::Robot()
 {
 	// To-Do: set your path!
-	displayImages = LoadImage("../../../RobotImages.png");
+	displayImages = LoadImage("RobotImages.png");
 }
 
 /**
@@ -89,7 +89,7 @@ void Robot::setSetpoint(Setpoint setpoint)
  *
  * @param destination The destination coordinate (x: left-right, y: up-down, z: forward-back)
  */
-void Robot::liftTo(Vector3 destination)
+void Robot::liftTo(Vector3 destination, Vector2 origin)
 {
 	vector<char> payload(12);
 
@@ -97,7 +97,18 @@ void Robot::liftTo(Vector3 destination)
 	*((float*)&payload[4]) = destination.y;
 	*((float*)&payload[8]) = destination.z;
 
-	mqttClient->publish("hook/" + robotId + "/cmd", payload);
+	mqttClient->publish("hook/" + this->robotId + "/cmd", payload);
+
+	float distance = Vector2Distance(origin, {destination.x, destination.z});
+	distance = (distance>0) ? distance : -distance;
+	printf("LIFTING ROBOT \n");
+
+	float actualTime = (float)GetFrameTime();
+	while(actualTime < 4000)
+	{
+		actualTime += (float)GetFrameTime();
+		printf("time: %f   \n" ,actualTime );
+	}
 }
 
 /**
@@ -156,6 +167,27 @@ void Robot::movement(Vector2 addCoordinates)
 	this->setpoint.position = this->coordinates;
 	this->isMoving = true;
 	this->setSetpoint(this->setpoint);
+
+	if(this->setpoint.position.x > 1.4)
+	{
+		this->setpoint.position.x = 1.3;
+		this->setSetpoint(this->setpoint);
+	}
+	else if(this->setpoint.position.x < -1.4)
+	{
+		this->setpoint.position.x = -1.3;
+		this->setSetpoint(this->setpoint);
+	}
+	else if(this->setpoint.position.y > 1.7)
+	{
+		this->setpoint.position.y = 1.6;
+		this->setSetpoint(this->setpoint);
+	}
+	else if(this->setpoint.position.y < -1.8 )
+	{
+		this->setpoint.position.y = -1.7;
+		this->setSetpoint(this->setpoint);
+	}
 }
 
 void Robot::setDirection(Direction currentDirection)
@@ -173,8 +205,9 @@ Direction Robot::getDirection()
 {
 	return this->direction;
 }
-void  Robot::resetRobot()
+void  Robot::resetRobot(Vector2 actualPlace)
 {
 	this->coordinates = { this->inicialPosition.x, this->inicialPosition.y };
-	this->movement({ 0,0 });
+	this->setSetpoint({ this->inicialPosition.x, this->inicialPosition.y, 0 });
+	this->liftTo({this->inicialPosition.x, 0, this->inicialPosition.y}, actualPlace);
 }

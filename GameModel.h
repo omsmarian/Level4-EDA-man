@@ -22,7 +22,8 @@ enum GameState
 {
     GameStart,
     GameStarting,
-    GamePlaying
+    GamePlaying,
+    GameEnding
 };
 
 #include <string>
@@ -57,6 +58,9 @@ public:
     int viewColision();
 
     void resetGame();
+    void stopGame();
+
+    GameState gameState;
 
 private:
     MQTTClient* mqttClient;
@@ -68,7 +72,7 @@ private:
     std::string pointsMaze;
     std::vector<Robot*> robots;
 
-    int gameState;
+    
     float gameStateTime;
 
     int score;
@@ -82,5 +86,6 @@ private:
     int lives;
     std::list<int> eatenFruits;
 };
+
 
 #endif

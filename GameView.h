@@ -27,6 +27,7 @@ enum GameViewMessage
     GameViewMessageNone,
     GameViewMessageReady,
     GameViewMessageGameOver,
+    GameViewMessagePlayAgain,
 };
 
 class GameView

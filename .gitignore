@@ -6,3 +6,4 @@
 /.vs
 /build
 /.cache
+/CMakeSettings.json

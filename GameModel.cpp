@@ -29,6 +29,7 @@ const int MAZE_SIZE = MAZE_WIDTH * MAZE_HEIGHT;
 GameModel::GameModel(MQTTClient* mqttClient)
 {
 	this->mqttClient = mqttClient;
+	this->gameState = GameStart;
 }
 
 /**
@@ -89,6 +90,7 @@ void GameModel::start(string maze)
 
 	// Just for testing
 	gameView->playAudio("mainStart");
+	this->gameState = GameStarting;
 }
 /*Duplica el laberinto para conseguir los puntos
 *
@@ -119,6 +121,11 @@ void GameModel::update(float deltaTime)
 {
 	gameStateTime += deltaTime;
 
+	if (gameStateTime >= 1.0)
+	{
+		this->gameView->setMessage(GameViewMessageNone);
+	}
+
 	int x, y;
 
 	for (auto robot : robots)
@@ -129,12 +136,12 @@ void GameModel::update(float deltaTime)
 	playerPosition.y -= 0.05;
 	//printf("x = %f , y = %f\n", playerPosition.x, playerPosition.y);
 
-	char* tile = &(this->pointsMaze[MAZE_WIDTH*((int)playerPosition.y) + ((int)playerPosition.x)]);
+	char* tile = &(this->pointsMaze[MAZE_WIDTH * ((int)playerPosition.y) + ((int)playerPosition.x)]);
 
 	if (*tile != '0')           //finds a point
 	{
 		//printf("x = %f , y = %f\n", playerPosition.x, playerPosition.y);      
-		this->gameView->clearTile((int)playerPosition.x , (int) playerPosition.y);
+		this->gameView->clearTile((int)playerPosition.x, (int)playerPosition.y);
 		if (*tile == '1')
 		{
 			this->remainingDots--;
@@ -152,30 +159,42 @@ void GameModel::update(float deltaTime)
 	if (energyzerOn)
 	{
 		//frightened();
-		if(this->gameStateTime>=(this->energizerTime + 7.0))
+		if (this->gameStateTime >= (this->energizerTime + 7.0))
 		{
-			this->energyzerOn=false;
+			this->energyzerOn = false;
 		}
 	}
-	int robotColision=viewColision();
+
+	int robotColision = viewColision();
 	if (robotColision)
 	{
 		static int quantityOfEatenGhosts;
-		if(this->energyzerOn) //player chases ghosts
+		if (this->energyzerOn) //player chases ghosts
 		{
 			quantityOfEatenGhosts++;
-			this->score += 200*quantityOfEatenGhosts;
-			this->robots[robotColision]->resetRobot();
+			this->score += 200 * quantityOfEatenGhosts;
+			this->robots[robotColision]->resetRobot(this->robots[robotColision]->getCoordinates());
 		}
 		else
 		{
-			quantityOfEatenGhosts=0;
+			quantityOfEatenGhosts = 0;
 			this->lives--;
 			resetGame();
+			this->gameView->setMessage(GameViewMessageReady);
+			for(int i = 0; i < 0xFFFFFF; i++){}
+			this->gameView->setMessage(GameViewMessageNone);
 		}
 	}
+
 	this->gameView->setScore(this->score);
 	this->gameView->setLives(this->lives);
+	if (this->lives == 0)
+	{
+
+		this->gameView->setMessage(GameViewMessageGameOver);
+		this->gameState = GameEnding;
+	}
+	this->gameView->update(GameViewMessageNone);
 }
 
 
@@ -194,7 +213,7 @@ bool GameModel::isTileFree(Vector2 tilePosition)
 	if ((tilePosition.y < 0) || (tilePosition.y >= MAZE_HEIGHT))
 		return false;
 
-	char tile = maze[(int)tilePosition.y * MAZE_WIDTH + (int)tilePosition.x];
+	char tile = this->maze[(int)tilePosition.y * MAZE_WIDTH + (int)tilePosition.x];
 
 	return (tile == ' ') || (tile == '+') || (tile == '#');
 }
@@ -212,18 +231,41 @@ int GameModel::getPlayerDirection(int i)
 
 int GameModel::viewColision()
 {
-	Vector2 playerPosition = getPosition(0);
-
-	for (int i = 1; i < robots.size(); i++)
+	for (int i = 0; i < robots.size(); i++)
 	{
-		Vector2 ghostPosition = getPosition(i);
-		float distance = Vector2Distance(playerPosition, ghostPosition);
-		if (distance <= PROXIMITY_CONSTANT)
+		Vector2 robot1Position = getPosition(i);
+		for(int j = 0; j < robots.size(); j++)
 		{
-			return i;
+			if(j != i)
+			{
+				Vector2 robot2Position = getPosition(j);
+				float distance = Vector2Distance(robot1Position, robot2Position);
+				if (distance <= PROXIMITY_CONSTANT)
+				{
+					if(i == 0 || j == 0)
+					{
+						return j;
+					}
+					else
+					{
+						for(int k = 0; k<2; k++)
+						{
+							k = k ? i : j;
+							Direction direccion = this->robots[i]->getDirection();
+							if(direccion == DirectionUp)
+								this->robots[i]->setDirection(DirectionDown);
+							else if(direccion == DirectionDown)
+								this->robots[i]->setDirection(DirectionUp);
+							else if(direccion == DirectionLeft)
+								this->robots[i]->setDirection(DirectionRight);
+							else if(direccion == DirectionRight)
+								this->robots[i]->setDirection(DirectionLeft);
+						}
+					}					
+				}
+			}
 		}
 	}
-
 	return 0;
 }
 
@@ -231,6 +273,24 @@ void GameModel::resetGame()
 {
 	for (auto robot : robots)
 	{
-		robot->resetRobot();
+		robot->resetRobot(robot->getCoordinates());
 	}
 }
+
+/*void frightened(); 
+{
+	acelero jugador, desacelero fantasmas
+	cambio color de fantasmas
+
+
+
+
+ }
+ 
+
+ 
+ 
+
+
+
+ */

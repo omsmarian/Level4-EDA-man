@@ -144,6 +144,8 @@ void GameView::setMessage(GameViewMessage value)
         setTiles(9, 20, READY_COLOR, "  READY!  ");
     else if (gameViewMessage == GameViewMessageGameOver)
         setTiles(9, 20, GAMEOVER_COLOR, "GAME  OVER");
+    else if (gameViewMessage == GameViewMessagePlayAgain)
+        setTiles(2, 34, GAMEOVER_COLOR, "PRESS SPACE TO PLAY AGAIN");
     else
         setTiles(9, 20, 0, "          ");
 }
