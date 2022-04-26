@@ -201,4 +201,5 @@ void  Robot::resetRobot()
 {
 	this->coordinates = { this->inicialPosition.x, this->inicialPosition.y };
 	this->setSetpoint({ this->coordinates, 0 });
+	this->liftTo(converter(coordinates));
 }

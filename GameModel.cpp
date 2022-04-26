@@ -163,15 +163,14 @@ void GameModel::update(float deltaTime)
 		}
 	}
 
-	int robotColision = viewColision();
-	if (robotColision)
+	if (viewColision())
 	{
 		int quantityOfEatenGhosts = 0;
 		if (this->energyzerOn)					//player chases ghosts
 		{
 			quantityOfEatenGhosts++;
 			this->score += 200 * quantityOfEatenGhosts;
-			this->robots[robotColision]->resetRobot();
+			this->robots[robotToReset]->resetRobot();
 		}
 		else
 		{
@@ -226,44 +225,21 @@ int GameModel::getPlayerDirection(int i)
 	return this->robots[i]->getDirection();
 }
 
-int GameModel::viewColision()
+bool GameModel::viewColision()
 {
-	for (int i = 0; i < robots.size(); i++)
+Vector2 playerPosition = getPosition(0);
+
+for (int i = 1; i < robots.size(); i++)
+{
+	Vector2 ghostPosition = getPosition(i);
+	float distance = Vector2Distance(playerPosition, ghostPosition);
+	if (distance <= PROXIMITY_CONSTANT)
 	{
-		Vector2 robot1Position = getPosition(i);
-		for(int j = 0; j < robots.size(); j++)
-		{
-			if(j != i)
-			{
-				Vector2 robot2Position = getPosition(j);
-				float distance = Vector2Distance(robot1Position, robot2Position);
-				if (distance <= PROXIMITY_CONSTANT)
-				{
-					if(i == 0 || j == 0)
-					{
-						return j;
-					}
-					else
-					{
-						for(int k = 0; k<2; k++)
-						{
-							k = k ? i : j;
-							Direction direccion = this->robots[i]->getDirection();
-							if(direccion == DirectionUp)
-								this->robots[i]->setDirection(DirectionDown);
-							else if(direccion == DirectionDown)
-								this->robots[i]->setDirection(DirectionUp);
-							else if(direccion == DirectionLeft)
-								this->robots[i]->setDirection(DirectionRight);
-							else if(direccion == DirectionRight)
-								this->robots[i]->setDirection(DirectionLeft);
-						}
-					}					
-				}
-			}
-		}
+		robotToReset = i;
+		return true;
 	}
-	return 0;
+}
+return false;
 }
 
 void GameModel::resetGame()

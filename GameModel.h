@@ -55,7 +55,7 @@ public:
     Vector2 getPosition(int i);
     int getPlayerDirection(int i);
 
-    int viewColision();
+    bool viewColision();
 
     void resetGame();
     void delay(int numberOfSeconds);
@@ -79,6 +79,7 @@ private:
 
     bool energyzerOn;
     float energizerTime;
+    int robotToReset;
 
     int remainingDots;
     int remainingEnergizers;
