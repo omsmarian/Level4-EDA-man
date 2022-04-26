@@ -58,7 +58,7 @@ public:
     int viewColision();
 
     void resetGame();
-    void stopGame();
+    void delay(int numberOfSeconds);
 
     GameState gameState;
 

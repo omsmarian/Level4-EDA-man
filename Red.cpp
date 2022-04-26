@@ -12,7 +12,7 @@ void Red::start(MQTTClient* client, GameModel* model)
 	this->mqttClient = client;
 	this->gameModel = model;
 	this->setDisplay(17);
-	this->liftTo({this->inicialPosition.x, 0, this->inicialPosition.y}, {1.4, -1.4});
+	this->liftTo(converter(this->inicialPosition));
 }
 
 void Red::update(float deltaTime)

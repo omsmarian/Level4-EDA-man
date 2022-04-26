@@ -91,10 +91,10 @@ int main(int, char **)
 
     // Players
     Player jugador("robot1",{0,-0.85});
-    Red red("robot2",{1.2,1.3});
-    Pink pink("robot3", { -1.2,1.3 });
-    Cyan cyan("robot4", { 1.2,-1.4 });
-    Orange orange("robot5", { -1.2 ,-1.4 });
+    Red red("robot2",{0,0.35});
+    Pink pink("robot3", { -0.2,0.35 });
+    Cyan cyan("robot4", { -0.15,0.05 });
+    Orange orange("robot5", { 0.15 ,0.05 });
 
     // Configure
     

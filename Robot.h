@@ -49,7 +49,6 @@ public:
     Robot();
     virtual ~Robot();
 
-    void resetRobot(Vector2 actualPlace);
     virtual void start(MQTTClient* client, GameModel* model) = 0;
     virtual void update(float deltaTime) = 0;
 
@@ -58,6 +57,7 @@ public:
     Vector2 getCoordinates();
     Direction getDirection();
     void movement(Vector2 coordinates);
+    void resetRobot();
     
     std::string robotId;
     Vector2 realPosition;
@@ -82,7 +82,7 @@ protected:
     void setDisplay(int imageIndex);
     void setEyes(Color leftEye, Color rightEye);
     Vector3 converter(Vector2 vector);
-    void liftTo(Vector3 destination, Vector2 origin);
+    void liftTo(Vector3 destination);
 };
 
 #endif

@@ -22,7 +22,7 @@ using namespace std;
 Robot::Robot()
 {
 	// To-Do: set your path!
-	displayImages = LoadImage("RobotImages.png");
+	displayImages = LoadImage("../../../RobotImages.png");
 }
 
 /**
@@ -89,7 +89,7 @@ void Robot::setSetpoint(Setpoint setpoint)
  *
  * @param destination The destination coordinate (x: left-right, y: up-down, z: forward-back)
  */
-void Robot::liftTo(Vector3 destination, Vector2 origin)
+void Robot::liftTo(Vector3 destination)
 {
 	vector<char> payload(12);
 
@@ -99,16 +99,8 @@ void Robot::liftTo(Vector3 destination, Vector2 origin)
 
 	mqttClient->publish("hook/" + this->robotId + "/cmd", payload);
 
-	float distance = Vector2Distance(origin, {destination.x, destination.z});
-	distance = (distance>0) ? distance : -distance;
 	printf("LIFTING ROBOT \n");
-
-	float actualTime = (float)GetFrameTime();
-	while(actualTime < 4000)
-	{
-		actualTime += (float)GetFrameTime();
-		printf("time: %f   \n" ,actualTime );
-	}
+	this->gameModel->delay(6);
 }
 
 /**
@@ -205,9 +197,9 @@ Direction Robot::getDirection()
 {
 	return this->direction;
 }
-void  Robot::resetRobot(Vector2 actualPlace)
+void  Robot::resetRobot()
 {
 	this->coordinates = { this->inicialPosition.x, this->inicialPosition.y };
 	this->setSetpoint({ this->inicialPosition.x, this->inicialPosition.y, 0 });
-	this->liftTo({this->inicialPosition.x, 0, this->inicialPosition.y}, actualPlace);
+	this->liftTo(this->converter(this->coordinates));
 }

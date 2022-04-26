@@ -85,11 +85,10 @@ void GameModel::start(string maze)
 	gameView->setEatenFruits(eatenFruits);
 
 
+	gameView->playAudio("mainStart");
 	for (auto robot : robots)
 		robot->start(this->mqttClient, this);
 
-	// Just for testing
-	gameView->playAudio("mainStart");
 	this->gameState = GameStarting;
 }
 /*Duplica el laberinto para conseguir los puntos
@@ -134,13 +133,11 @@ void GameModel::update(float deltaTime)
 	Setpoint playerSetPoint = { robots[0]->getCoordinates(),0 };
 	Vector2 playerPosition = robots[0]->getTilePosition(playerSetPoint);
 	playerPosition.y -= 0.05;
-	//printf("x = %f , y = %f\n", playerPosition.x, playerPosition.y);
 
 	char* tile = &(this->pointsMaze[MAZE_WIDTH * ((int)playerPosition.y) + ((int)playerPosition.x)]);
 
 	if (*tile != '0')           //finds a point
-	{
-		//printf("x = %f , y = %f\n", playerPosition.x, playerPosition.y);      
+	{    
 		this->gameView->clearTile((int)playerPosition.x, (int)playerPosition.y);
 		if (*tile == '1')
 		{
@@ -158,7 +155,6 @@ void GameModel::update(float deltaTime)
 	}
 	if (energyzerOn)
 	{
-		//frightened();
 		if (this->gameStateTime >= (this->energizerTime + 7.0))
 		{
 			this->energyzerOn = false;
@@ -173,7 +169,7 @@ void GameModel::update(float deltaTime)
 		{
 			quantityOfEatenGhosts++;
 			this->score += 200 * quantityOfEatenGhosts;
-			this->robots[robotColision]->resetRobot(this->robots[robotColision]->getCoordinates());
+			this->robots[robotColision]->resetRobot();
 		}
 		else
 		{
@@ -181,7 +177,7 @@ void GameModel::update(float deltaTime)
 			this->lives--;
 			resetGame();
 			this->gameView->setMessage(GameViewMessageReady);
-			for(int i = 0; i < 0xFFFFFF; i++){}
+			delay(1);
 			this->gameView->setMessage(GameViewMessageNone);
 		}
 	}
@@ -273,24 +269,19 @@ void GameModel::resetGame()
 {
 	for (auto robot : robots)
 	{
-		robot->resetRobot(robot->getCoordinates());
+		robot->resetRobot();
 	}
 }
 
-/*void frightened(); 
+void GameModel::delay(int numberOfSeconds)
 {
-	acelero jugador, desacelero fantasmas
-	cambio color de fantasmas
+	// Converting time into milli_seconds
+	int milliSeconds = 1000 * numberOfSeconds;
 
+	// Storing start time
+	clock_t startTime = clock();
 
-
-
- }
- 
-
- 
- 
-
-
-
- */
+	// looping till required time is not achieved
+	while (clock() < startTime + milliSeconds)
+		;
+}
