@@ -127,8 +127,7 @@ void GameModel::update(float deltaTime)
 
 	int x, y;
 
-	for (auto robot : robots)
-		robot->update(deltaTime);
+
 
 	Setpoint playerSetPoint = { robots[0]->getCoordinates(),0 };
 	Vector2 playerPosition = robots[0]->getTilePosition(playerSetPoint);
@@ -162,8 +161,8 @@ void GameModel::update(float deltaTime)
 			this->energyzerOn = false;
 		}
 	}
-
-	if (viewColision())
+	bool colision = viewColision();
+	if (colision)
 	{
 		int quantityOfEatenGhosts = 0;
 		if (this->energyzerOn)					//player chases ghosts
@@ -180,7 +179,10 @@ void GameModel::update(float deltaTime)
 			delay(1);
 			this->gameView->setMessage(GameViewMessageNone);
 		}
+		colision = false;
 	}
+	for (auto robot : robots)
+		robot->update(deltaTime);
 
 	this->gameView->setScore(this->score);
 	this->gameView->setLives(this->lives);
@@ -259,6 +261,5 @@ void GameModel::delay(int numberOfSeconds)
 	clock_t startTime = clock();
 
 	// looping till required time is not achieved
-	while (clock() < startTime + milliSeconds)
-		;
+	while (clock() < startTime + milliSeconds);
 }
