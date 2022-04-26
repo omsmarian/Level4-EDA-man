@@ -1,3 +1,14 @@
+/**
+ * EDA-Man
+ *
+ * @file Pink.h
+ *
+ * @copyright Copyright (C) 2022
+ *
+ * @authors Tiago Nanni, Mariano Oms , Tomas Whickham and Cristian Meichtry
+ *
+ */
+
 #ifndef PINK_H
 #define PINK_H
 

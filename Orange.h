@@ -1,3 +1,14 @@
+/**
+ * EDA-Man
+ *
+ * @file Orange.h
+ *
+ * @copyright Copyright (C) 2022
+ *
+ * @authors Tiago Nanni, Mariano Oms , Tomas Whickham and Cristian Meichtry
+ *
+ */
+
 #ifndef ORANGE_H
 #define ORANGE_H
 

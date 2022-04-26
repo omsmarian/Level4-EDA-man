@@ -1,11 +1,11 @@
 /**
- * @file GameModel.h
- * @author Marc S. Ressl
- * @brief EDA-Man game model
- * @version 0.1
- * @date 2022-04-12
+ * EDA-Man
  *
- * @copyright Copyright (c) 2022
+ * @file GameModel.cpp
+ *
+ * @copyright Copyright (C) 2022
+ *
+ * @authors Tiago Nanni, Mariano Oms , Tomas Whickham and Cristian Meichtry
  *
  */
 
@@ -30,6 +30,8 @@ GameModel::GameModel(MQTTClient* mqttClient)
 {
 	this->mqttClient = mqttClient;
 	this->gameState = GameStart;
+	this->gameStateTime = 0;
+	this->liftedRobots = 0;
 }
 
 /**
@@ -91,8 +93,11 @@ void GameModel::start(string maze)
 
 	this->gameState = GameStarting;
 }
-/*Duplica el laberinto para conseguir los puntos
+/*@brief Duplicates maze to view only dots and energizers
 *
+*@param original maze
+*
+* @return new maze
 */
 std::string GameModel::getPointsMaze(std::string originalMaze)
 {
@@ -111,16 +116,16 @@ std::string GameModel::getPointsMaze(std::string originalMaze)
 	}
 	return pointsMaze;
 }
+
 /**
  * @brief Updates game model for current frame.
  *
- * @param deltaTime Number of seconds since the last frame
  */
 void GameModel::update(float deltaTime)
 {
-	gameStateTime += deltaTime;
+	this->gameStateTime += deltaTime;
 
-	if (gameStateTime >= 1.0)
+	if (gameStateTime >= 1.0)	//take away ready message
 	{
 		this->gameView->setMessage(GameViewMessageNone);
 	}
@@ -129,21 +134,25 @@ void GameModel::update(float deltaTime)
 
 
 
-	Setpoint playerSetPoint = { robots[0]->getCoordinates(),0 };
+	Setpoint playerSetPoint = { robots[0]->getCoordinates(),0 };						//define setpoint and coordinates for player
 	Vector2 playerPosition = robots[0]->getTilePosition(playerSetPoint);
 	playerPosition.y -= 0.05;
 
-	char* tile = &(this->pointsMaze[MAZE_WIDTH * ((int)playerPosition.y) + ((int)playerPosition.x)]);
+	char* tile = &(this->pointsMaze[MAZE_WIDTH *
+		((int)playerPosition.y) + ((int)playerPosition.x)]);		//get tile below player
 
-	if (*tile != '0')           //finds a point
-	{    
+	if (*tile != '0')							//check for dot or energizer
+	{
 		this->gameView->clearTile((int)playerPosition.x, (int)playerPosition.y);
-		if (*tile == '1')
+		static int wakaWaka = 1;
+		this->robots[0]->setImageIndex(robots[0]->getOriginalImage() + wakaWaka);
+		wakaWaka = -wakaWaka;
+		if (*tile == '1')						//finds a dot
 		{
 			this->remainingDots--;
 			this->score += 10;
 		}
-		else if (*tile == '2')
+		else if (*tile == '2')					//finds a energizer
 		{
 			this->remainingEnergizers--;
 			this->score += 50;
@@ -152,16 +161,42 @@ void GameModel::update(float deltaTime)
 		}
 		*tile = '0';
 	}
-	if (energyzerOn)
+	if (energyzerOn)								//if pacman eats an energizer
 	{
-		printf("energizer time : %f\n", energizerTime);
-		printf("game time : %f\n", gameStateTime);
-		if (this->gameStateTime >= (this->energizerTime + 7.0))
+		static bool image = true;
+		if (image)
+		{
+			for (int i = 1; i < robots.size(); i++)						//change ghost image
+			{
+				robots[i]->setImageIndex(25);
+			}
+			image = false;
+		}
+		if (this->gameStateTime >= (this->energizerTime + 7.0))				//set energyzer time limit
 		{
 			this->energyzerOn = false;
+			image = true;
+			for (int i = 1; i < robots.size(); i++)
+			{
+				robots[i]->setImageIndex(robots[i]->getOriginalImage());
+			}
 		}
 	}
-	bool colision = viewColision();
+	Vector2 playerCoords = this->robots[0]->getCoordinates();
+	if ((playerCoords.x > 1.2) && (playerCoords.y > -0.1) && (playerCoords.y < 0.1))
+	{
+		this->robots[0]->liftTo({ -1.2,0,0 });
+		this->robots[0]->setCoordinates({ -1.1,0 });
+		this->robots[0]->setSetpoint({ {-1.1,0},0 });
+	}
+	else if ((playerCoords.x < -1.2) && (playerCoords.y > -0.1) && (playerCoords.y < 0.1))
+	{
+		this->robots[0]->liftTo({ 1.2,0,0 });
+		this->robots[0]->setCoordinates({ 1.1,0 });
+		this->robots[0]->setSetpoint({ {1.1,0},0 });
+	}
+
+	bool colision = viewColision();				//check for colision
 	if (colision)
 	{
 		int quantityOfEatenGhosts = 0;
@@ -170,23 +205,30 @@ void GameModel::update(float deltaTime)
 			quantityOfEatenGhosts++;
 			this->score += 200 * quantityOfEatenGhosts;
 			this->robots[robotToReset]->resetRobot();
+			for (int i = 1; i < robots.size(); i++)
+			{
+
+				robots[i]->setSetpoint({ robots[i]->getCoordinates(), 0 });
+			}
+			this->liftedRobots++;
 		}
-		else
+		else							//ghost colide player
 		{
 			this->lives--;
 			resetGame();
+			this->liftedRobots = 0;
 			this->gameView->setMessage(GameViewMessageReady);
 			delay(1);
 			this->gameView->setMessage(GameViewMessageNone);
 		}
 		colision = false;
 	}
-	for (auto robot : robots)
+	for (auto robot : robots)		//update robots position
 		robot->update(deltaTime);
 
 	this->gameView->setScore(this->score);
 	this->gameView->setLives(this->lives);
-	if (this->lives == 0)
+	if (this->lives == 0)		//player out of lives
 	{
 
 		this->gameView->setMessage(GameViewMessageGameOver);
@@ -215,35 +257,54 @@ bool GameModel::isTileFree(Vector2 tilePosition)
 
 	return (tile == ' ') || (tile == '+') || (tile == '#');
 }
-
+/**
+ * @brief gets position of robot
+ *
+ * @param robot number
+ *
+ * @return coordinates of robot
+ */
 
 Vector2 GameModel::getPosition(int i)
 {
 	return this->robots[i]->getCoordinates();
 }
-
+/**
+ * @brief gets direction of robot
+ *
+ * @param robot number
+ *
+ * @return direction of robot
+ */
 int GameModel::getPlayerDirection(int i)
 {
 	return this->robots[i]->getDirection();
 }
-
+/**
+ * @brief checks for colision
+ *
+ * @return colision flag
+ */
 bool GameModel::viewColision()
 {
-Vector2 playerPosition = getPosition(0);
+	Vector2 playerPosition = getPosition(0);
 
-for (int i = 1; i < robots.size(); i++)
-{
-	Vector2 ghostPosition = getPosition(i);
-	float distance = Vector2Distance(playerPosition, ghostPosition);
-	if (distance <= PROXIMITY_CONSTANT)
+	for (int i = 1; i < robots.size(); i++)		//Checks distance between robots
 	{
-		robotToReset = i;
-		return true;
+		Vector2 ghostPosition = getPosition(i);
+		float distance = Vector2Distance(playerPosition, ghostPosition);
+		if (distance <= PROXIMITY_CONSTANT)
+		{
+			robotToReset = i;
+			return true;
+		}
 	}
+	return false;
 }
-return false;
-}
-
+/**
+ * @brief resets all robots to initial positions
+ *
+ */
 void GameModel::resetGame()
 {
 	for (auto robot : robots)
@@ -251,7 +312,11 @@ void GameModel::resetGame()
 		robot->resetRobot();
 	}
 }
-
+/**
+ * @brief makes a delay in program
+ *
+ * @param number of seconds to delay
+ */
 void GameModel::delay(int numberOfSeconds)
 {
 	// Converting time into milli_seconds
@@ -261,5 +326,7 @@ void GameModel::delay(int numberOfSeconds)
 	clock_t startTime = clock();
 
 	// looping till required time is not achieved
-	while (clock() < startTime + milliSeconds);
+	while (clock() < startTime + milliSeconds)
+	{
+	}
 }

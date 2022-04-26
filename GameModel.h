@@ -1,12 +1,12 @@
 /**
+ * EDA-Man
+ *
  * @file GameModel.h
- * @author Marc S. Ressl
- * @brief EDA-Man game model
- * @version 0.1
- * @date 2022-04-12
- * 
- * @copyright Copyright (c) 2022
- * 
+ *
+ * @copyright Copyright (C) 2022
+ *
+ * @authors Tiago Nanni, Mariano Oms , Tomas Whickham and Cristian Meichtry
+ *
  */
 
 #ifndef _GAMEMODEL_H
@@ -16,14 +16,14 @@ class Robot;
 
 /**
  * @brief Game state
- * 
+ *
  */
 enum GameState
 {
-    GameStart,
-    GameStarting,
-    GamePlaying,
-    GameEnding
+	GameStart,
+	GameStarting,
+	GamePlaying,
+	GameEnding
 };
 
 #include <string>
@@ -41,51 +41,52 @@ enum GameState
 class GameModel
 {
 public:
-    GameModel(MQTTClient* mqttClient);
+	GameModel(MQTTClient* mqttClient);
 
-    void setGameView(GameView* gameView);
+	void setGameView(GameView* gameView);
 
-    void addRobot(Robot* robot);
+	void addRobot(Robot* robot);
 
-    void start(std::string maze);
-    void update(float deltaTime);
+	void start(std::string maze);
+	void update(float deltaTime);
 
-    bool isTileFree(Vector2 position);
+	bool isTileFree(Vector2 position);
 
-    Vector2 getPosition(int i);
-    int getPlayerDirection(int i);
+	Vector2 getPosition(int i);
+	int getPlayerDirection(int i);
 
-    bool viewColision();
+	bool viewColision();
 
-    void resetGame();
-    void delay(int numberOfSeconds);
+	void resetGame();
+	void delay(int numberOfSeconds);
 
-    GameState gameState;
+	GameState gameState;
+	int liftedRobots;
 
 private:
-    MQTTClient* mqttClient;
-    GameView* gameView;
+	MQTTClient* mqttClient;
+	GameView* gameView;
 
-    std::string getPointsMaze(std::string);
+	std::string getPointsMaze(std::string);
 
-    std::string maze;
-    std::string pointsMaze;
-    std::vector<Robot*> robots;
+	std::string maze;
+	std::string pointsMaze;
+	std::vector<Robot*> robots;
 
-    
-    float gameStateTime = 0;
 
-    int score;
+	float gameStateTime;
 
-    bool energyzerOn;
-    float energizerTime;
-    int robotToReset;
+	int score;
 
-    int remainingDots;
-    int remainingEnergizers;
+	bool energyzerOn;
+	float energizerTime;
+	int robotToReset;
 
-    int lives;
-    std::list<int> eatenFruits;
+	int remainingDots;
+	int remainingEnergizers;
+
+	int lives;
+	std::list<int> eatenFruits;
 };
 
 

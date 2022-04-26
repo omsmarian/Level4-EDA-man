@@ -1,8 +1,12 @@
 /**
- * Robot base class.
+ * EDA-Man
+ *
+ * @file Robot.cpp
  *
  * @copyright Copyright (C) 2022
- * @author Marc S. Ressl
+ *
+ * @authors Tiago Nanni, Mariano Oms , Tomas Whickham and Cristian Meichtry
+ *
  */
 
 #include <cstring>  // std::memcpy
@@ -100,7 +104,6 @@ void Robot::liftTo(Vector3 destination)
 	mqttClient->publish("hook/" + this->robotId + "/cmd", payload);
 	this->gameModel->delay(6);
 
-	printf("LIFTING ROBOT \n");
 }
 
 /**
@@ -141,6 +144,13 @@ void Robot::setEyes(Color leftEye, Color rightEye)
 	payload[2] = rightEye.b;
 	mqttClient->publish(robotId + "/display/rightEye/set", payload);
 }
+/**
+ * @brief converts vector 2 to vector 3
+ *
+ * @param vector 2 to convert
+ *
+ * @return converted vector 3
+ */
 
 Vector3 Robot::converter(Vector2 vector)
 {
@@ -151,7 +161,12 @@ Vector3 Robot::converter(Vector2 vector)
 	return variable;
 }
 
-
+/**
+ * @brief sets the movement of robot
+ *
+ * @param coordinates to move
+ *
+ */
 void Robot::movement(Vector2 addCoordinates)
 {
 	this->coordinates.x += addCoordinates.x;
@@ -160,46 +175,90 @@ void Robot::movement(Vector2 addCoordinates)
 	this->isMoving = true;
 	this->setSetpoint(this->setpoint);
 
-	if(this->setpoint.position.x > 1.4)
+	if (this->setpoint.position.x > 1.4)		//sets map limits for movement
 	{
 		this->setpoint.position.x = 1.3;
 		this->setSetpoint(this->setpoint);
 	}
-	else if(this->setpoint.position.x < -1.4)
+	else if (this->setpoint.position.x < -1.4)
 	{
 		this->setpoint.position.x = -1.3;
 		this->setSetpoint(this->setpoint);
 	}
-	else if(this->setpoint.position.y > 1.7)
+	else if (this->setpoint.position.y > 1.4)
 	{
-		this->setpoint.position.y = 1.6;
+		this->setpoint.position.y = 1.25;
 		this->setSetpoint(this->setpoint);
 	}
-	else if(this->setpoint.position.y < -1.8 )
+	else if (this->setpoint.position.y < -1.6)
 	{
-		this->setpoint.position.y = -1.7;
+		this->setpoint.position.y = -1.45;
 		this->setSetpoint(this->setpoint);
 	}
 }
-
+/**
+ * @brief sets the direction of robot
+ *
+ * @param current direction
+ *
+ */
 void Robot::setDirection(Direction currentDirection)
 {
 	this->direction = currentDirection;
 }
 
-
+/**
+ * @brief gets the coordinates of robot
+ *
+ * @return coordinates of robot
+ */
 Vector2 Robot::getCoordinates()
 {
 	return this->coordinates;
 }
-
+/**
+ * @brief sets the coordinates of robot
+ *
+ * @param coordinates of robot
+ */
+void Robot::setCoordinates(Vector2 nextCoords)
+{
+	this->coordinates = nextCoords;
+}
+/**
+ * @brief gets direction of robot
+ *
+ * @return direction of robot
+ */
 Direction Robot::getDirection()
 {
 	return this->direction;
 }
+/**
+ * @brief sets the robot to initial position
+ */
 void  Robot::resetRobot()
 {
 	this->coordinates = { this->inicialPosition.x, this->inicialPosition.y };
 	this->setSetpoint({ this->coordinates, 0 });
 	this->liftTo(converter(coordinates));
+}
+/**
+ * @brief sets the image to show on robot
+ *
+ * @param imageindex
+ */
+void Robot::setImageIndex(int image)
+{
+	this->setDisplay(image);
+}
+/**
+ * @brief gets the original robot image
+ *
+ * @return original robot image index
+ */
+
+int Robot::getOriginalImage()
+{
+	return this->originalImage;
 }

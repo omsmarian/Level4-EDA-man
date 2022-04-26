@@ -1,5 +1,21 @@
-#include "Cyan.h"
+/**
+ * EDA-Man
+ *
+ * @file Cyan.cpp
+ *
+ * @copyright Copyright (C) 2022
+ *
+ * @authors Tiago Nanni, Mariano Oms , Tomas Whickham and Cristian Meichtry
+ *
+ */
 
+
+#include "Cyan.h"
+ /**
+  * @brief sets initial values for ghost
+  *
+  * @param robot id and spawn coordinates
+  */
 Cyan::Cyan(std::string robotId, Vector2 spawn)
 {
 	this->robotId = robotId;
@@ -7,30 +23,44 @@ Cyan::Cyan(std::string robotId, Vector2 spawn)
 	this->coordinates = spawn;
 	this->lastDirection = 0;
 }
-
+/**
+ * @brief  inicializes ghost values
+ *
+ * @param mosquito client and game model
+ */
 
 void Cyan::start(MQTTClient* client, GameModel* model)
 {
 	this->mqttClient = client;
 	this->gameModel = model;
-	this->setDisplay(21);
+	this->originalImage = 21;
+	this->setDisplay(this->originalImage);
 	this->liftTo(converter(this->inicialPosition));
 }
-
+/**
+ * @brief sets ghost persecution and chase time
+ *
+ * @param deltaTime
+ */
 void Cyan::update(float deltaTime)
 {
 	this->timeUpdate += deltaTime;
-	if (this->timeUpdate < TIME_ARRAY[this->timeIndex])
+	if (this->timeUpdate < TIME_ARRAY[this->timeIndex])				//chase
 		this->persecucion({ 1.25,-1.7 }, deltaTime);
-	if (TIME_ARRAY[this->timeIndex] <= this->timeUpdate && this->timeUpdate < (TIME_ARRAY[this->timeIndex] + TIME_ARRAY[this->timeIndex + 1]))
+	if (TIME_ARRAY[this->timeIndex] <= this->timeUpdate && this->timeUpdate <
+		(TIME_ARRAY[this->timeIndex] + TIME_ARRAY[this->timeIndex + 1]))		//scatter
 		this->persecucion(this->getDestinationCyan(), deltaTime);
-	if (this->timeUpdate >= (TIME_ARRAY[this->timeIndex] + TIME_ARRAY[this->timeIndex + 1]))
+	if (this->timeUpdate >= (TIME_ARRAY[this->timeIndex] + TIME_ARRAY[this->timeIndex + 1]))		//update chase scatter seconds
 	{
 		this->timeIndex += 2;
 		this->timeUpdate = 0;
 	}
 }
-
+/**
+ * @brief sets the destination of the Cyan ghost
+ *
+ * @return vector of destiny
+ */
 
 Vector2 Cyan::getDestinationCyan()
 {
